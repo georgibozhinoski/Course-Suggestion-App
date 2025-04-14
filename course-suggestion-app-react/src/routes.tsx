@@ -2,6 +2,7 @@ import {createBrowserRouter} from "react-router";
 import Login from "@/pages/login.tsx";
 import ProtectedRoute from "@/lib/protectedRoute.tsx";
 import Homepage from "@/pages/homepage.tsx";
+import {Navbar} from "@/components/navbar.tsx";
 
 
 export const router = createBrowserRouter([
@@ -14,10 +15,20 @@ export const router = createBrowserRouter([
          element: <Login />,
      },
     {
-        path: "/homepage",
+        path: "/",
         element: (
             <ProtectedRoute>
-                <Homepage/>
+                <Navbar/>
             </ProtectedRoute>),
+        children: [
+            {
+                path: "homepage",
+                element: <Homepage/>
+            },
+            {
+                path: "search",
+                element: <Homepage/>
+            }
+        ]
     },
 ]);
