@@ -92,23 +92,20 @@ Tailwind CSS is used for all styles.
 - IF you need to change the tailwind classes, or add your own, edit `src/index.css` refer to [these docs](https://tailwindcss.com/docs/adding-custom-styles)
 - Link to [tailwind docs](https://tailwindcss.com/docs/aspect-ratio) 
 
+**Note: `primary` color in the tailwind classes is the blue color used in the figma design**
+
 ### Color System (Tailwind Customization)
 
-Customize Tailwind's `tailwind.config.ts` to reflect your Figma mockup:
+Customize Tailwind's `index.css` to reflect your Figma mockup:
 
 ```ts
-theme: {
-  extend: {
-    colors: {
-      background: '#0E0E10',
-      primary: '#1DB954',
-      accent: '#BB86FC',
-      // Add more from Figma as needed
-    },
-  },
-},
-darkMode: "class",
+--background: oklch(1 0 0);
+--foreground: #3a5a9f;
+--card: oklch(1 0 0);
+--card-foreground: oklch(0.129 0.042 264.695);
+--popover: oklch(1 0 0);
 ```
+Note: This project uses Tailwind 4, `tailwind.config.ts` is not present in the project, can be added later if needed
 
 Apply classes like:
 
