@@ -59,6 +59,21 @@ Require authentication. Wrapped with `<ProtectedRoute />` to check if the user i
         </ProtectedRoute>),
 }
 ```
+Note: Add protected routes as children of the "/" path , pages that are children of this path will have the navbar automatically present on top
+```
+ {
+        path: "/",
+        element: (
+            <ProtectedRoute>
+                <Navbar/>
+            </ProtectedRoute>),
+        children: [
+            {
+                path: "",
+                element: <Homepage/>
+            },
+            // add here
+```
 
 Note: 404 handling is already implemented using a dedicated page — no need to worry about it.
 
