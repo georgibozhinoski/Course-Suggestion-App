@@ -7,8 +7,9 @@ import avatar from "@/assets/avatar.png"
 export function Navbar() {
 
     return <>
-        <div className={'h-20 bg-primary position-fixed'}>
-            <div className={"w-full flex items-center justify-between px-10 top-10 position-absolute "} style={{position: 'absolute'}} >
+        <div className={'h-20 bg-primary w-full block'} style={{position: 'fixed'}}>
+            <div className={"w-full flex items-center justify-between px-10 top-10 position-absolute "}
+                 style={{position: 'absolute'}}>
 
                 <img src={logo} alt="logo" className={"h-20 position-absolute top-5 aspect-auto"}/>
 
