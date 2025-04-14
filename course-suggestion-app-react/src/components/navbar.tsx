@@ -1,47 +1,34 @@
-import React from "react";
 import {NavLink, Outlet} from "react-router-dom";
 import logo from "@/assets/logo.webp"
 import avatar from "@/assets/avatar.png"
 
+// to add more centerMenuLinks edit here
+const centerMenuLinks = [
+    {text: "Home", url: "/homepage"},
+    {text: "Search", url: "/search"},
+]
 
 export function Navbar() {
 
+    const navButtonStyle = ({isActive}: {
+        isActive: boolean
+    }) => (isActive ? "text-primary bg-white" : "text-white/70 bg-primary")
+        + ' button inline-block h-10 rounded-md p-2 shadow text-center align-middle w-36 text-lg border-1 box-border transition'
+
     return <>
-        <div className={'h-20 bg-primary w-full block'} style={{position: 'fixed'}}>
-            <div className={"w-full flex items-center justify-between px-10 top-10 position-absolute "}
-                 style={{position: 'absolute'}}>
-
-                <img src={logo} alt="logo" className={"h-20 position-absolute top-5 aspect-auto"}/>
-
-                <div className="flex space-x-4 w-auto">
-                    <NavLink
-                        to="/homepage"
-                        className={({isActive}) =>
-                            (isActive ? "text-primary bg-white" : "text-white/70 bg-primary")
-                            + ' button inline-block h-10 rounded-md p-2 shadow text-center align-middle w-36 text-lg box-border transition'
-                        }
-                    >
-                        Home
-                    </NavLink>
-
-                    <NavLink
-                        to="/search"
-                        className={({isActive}) =>
-                            (isActive ? "text-primary bg-white" : "text-white/70 bg-primary")
-                            + ' button inline-block h-10 rounded-md p-2 shadow text-center align-middle w-36 text-lg box-border transition'
-                        }
-                    >
-                        Search
-                    </NavLink>
-                </div>
-
-                <NavLink
-                    to="/profile"
-                >
+        <div className={'h-20 bg-primary w-full block fixed'}>
+            <div className={"w-full flex justify-between items-center px-10 top-10 absolute "}>
+                <img src={logo} alt="logo" className={"h-20 top-5 aspect-auto"}/>
+                <NavLink to="/profile">
                     <img src={avatar} alt="user picture" className={'w-10 h-10 rounded-full'}/>
                 </NavLink>
+            </div>
 
-
+            <div className="flex space-x-4 w-2/3 left-1/6 gap-1 justify-center items-center top-10 h-20 absolute ">
+                {centerMenuLinks.map((link) =>
+                    <NavLink to={link.url} className={navButtonStyle}>
+                        {link.text}
+                    </NavLink>)}
             </div>
         </div>
 
