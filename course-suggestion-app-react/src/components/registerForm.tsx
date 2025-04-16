@@ -56,10 +56,10 @@ export function RegisterForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Create a new account</CardTitle>
-                    <CardDescription>
-                        Enter your details below to create an account
-                    </CardDescription>
+                <CardTitle className="text-3xl text-center">REGISTER</CardTitle>
+                <CardDescription className="text-center">
+                Please enter your details.
+                </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
@@ -71,7 +71,7 @@ export function RegisterForm({
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="name@example.com"
+                                    placeholder="Enter your e-mail"
                                     value={email}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
@@ -85,7 +85,7 @@ export function RegisterForm({
                                 <Input
                                     id="firstName"
                                     type="text"
-                                    placeholder="John"
+                                    placeholder="Enter your name"
                                     value={firstName}
                                     onChange={(e) => {
                                         setFirstName(e.target.value);
@@ -99,7 +99,7 @@ export function RegisterForm({
                                 <Input
                                     id="lastName"
                                     type="text"
-                                    placeholder="Doe"
+                                    placeholder="Enter your surname"
                                     value={lastName}
                                     onChange={(e) => {
                                         setLastName(e.target.value);
@@ -114,6 +114,7 @@ export function RegisterForm({
                                     id="password"
                                     type="password"
                                     value={password}
+                                    placeholder="********"
                                     onChange={(e) => {
                                         setPassword(e.target.value);
                                         setFormError(null);
@@ -122,11 +123,12 @@ export function RegisterForm({
                                 />
                             </div>
                             <div className="grid gap-3">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                <Label htmlFor="confirmPassword">Repeat Password</Label>
                                 <Input
                                     id="confirmPassword"
                                     type="password"
                                     value={confirmPassword}
+                                    placeholder="********"
                                     onChange={(e) => {
                                         setConfirmPassword(e.target.value);
                                         setFormError(null);

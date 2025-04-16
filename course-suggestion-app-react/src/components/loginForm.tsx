@@ -37,12 +37,14 @@ export function LoginForm({
     }
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className={cn("flex flex-col gap-6 p-1/2 ", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Login to your account</CardTitle>
-                    <CardDescription>
-                        Enter your email below to login to your account
+                <CardTitle className="text-center text-3xl font-semibold" >
+                LOGIN
+                </CardTitle>
+                    <CardDescription className="text-center">
+                    Welcome back! Please enter your details.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -54,7 +56,7 @@ export function LoginForm({
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="name@example.com"
+                                    placeholder="Enter your email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -74,6 +76,7 @@ export function LoginForm({
                                     id="password"
                                     type="password"
                                     value={password}
+                                    placeholder="**********"
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
@@ -86,8 +89,8 @@ export function LoginForm({
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{" "}
-                            <a href="/register" className="underline underline-offset-4">
-                                Register
+                            <a href="/register" className="text-blue-500 hover:underline">
+                                Sign up for free
                             </a>
                         </div>
                     </form>
