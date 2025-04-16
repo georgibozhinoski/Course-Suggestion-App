@@ -13,6 +13,7 @@ import {useState} from "react";
 import {useAuthStore} from "@/store/authStore.ts";
 import {useNavigate} from "react-router";
 
+
 export function LoginForm({
                               className,
                               ...props
@@ -81,7 +82,7 @@ export function LoginForm({
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{" "}
-                            <a href="#" className="underline underline-offset-4">
+                            <a href="/register" className="underline underline-offset-4">
                                 Register
                             </a>
                         </div>

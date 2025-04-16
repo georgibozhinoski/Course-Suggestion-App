@@ -4,13 +4,17 @@ import ProtectedRoute from "@/lib/protectedRoute.tsx";
 import Homepage from "@/pages/homepage.tsx";
 import {Navbar} from "@/components/navbar.tsx";
 import NotFoundPage from "@/pages/404.tsx";
-
+import Register from "./pages/register";
 
 export const router = createBrowserRouter([
     {
          path: "/login",
          element: <Login />,
-     },
+    },
+    {
+        path: "/register",
+        element: <Register />,  // Add Register route here
+    },
     {
         path: "/",
         element: (
