@@ -33,6 +33,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already taken");
+        }
+
+
         var user = new User(
                 request.getFirstName(),
                 request.getLastName(),

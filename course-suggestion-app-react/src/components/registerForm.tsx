@@ -12,43 +12,41 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore.ts";
 import { useNavigate } from "react-router";
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
+import { FormError } from "./formError";
 
 export function RegisterForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
-    const [email, setEmail] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [formError, setFormError] = useState<string | null>(null);
+
     const register = useAuthStore((s) => s.register);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check if passwords match
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            setFormError("Passwords do not match");
             return;
         }
 
-        // Create user object
-        const user = { email, first_name: firstName, last_name: lastName, password };
+        const user = { email, firstName, lastName, password };
 
         try {
-            // Call the `register` method with the user object
             await register(user);
-            navigate('/login'); // Redirect to login after successful registration
+            navigate("/login");
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-                // Handle AxiosError
-                alert('Registration failed: ' + (error.response?.data?.message || 'Server error'));
+                setFormError(error.response?.data?.message || "Email may already be in use, check forgot password.");
             } else {
-                // Handle other types of errors (if needed)
-                alert('Registration failed: Unknown error');
+                setFormError("Registration failed: Unknown error");
             }
             console.error(error);
         }
@@ -66,6 +64,8 @@ export function RegisterForm({
                 <CardContent>
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-6">
+                            {formError && <FormError message={formError} />}
+
                             <div className="grid gap-3">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
@@ -73,7 +73,10 @@ export function RegisterForm({
                                     type="email"
                                     placeholder="name@example.com"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        setFormError(null);
+                                    }}
                                     required
                                 />
                             </div>
@@ -84,7 +87,10 @@ export function RegisterForm({
                                     type="text"
                                     placeholder="John"
                                     value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
+                                    onChange={(e) => {
+                                        setFirstName(e.target.value);
+                                        setFormError(null);
+                                    }}
                                     required
                                 />
                             </div>
@@ -95,7 +101,10 @@ export function RegisterForm({
                                     type="text"
                                     placeholder="Doe"
                                     value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
+                                    onChange={(e) => {
+                                        setLastName(e.target.value);
+                                        setFormError(null);
+                                    }}
                                     required
                                 />
                             </div>
@@ -105,7 +114,10 @@ export function RegisterForm({
                                     id="password"
                                     type="password"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        setFormError(null);
+                                    }}
                                     required
                                 />
                             </div>
@@ -115,10 +127,14 @@ export function RegisterForm({
                                     id="confirmPassword"
                                     type="password"
                                     value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
+                                        setFormError(null);
+                                    }}
                                     required
                                 />
                             </div>
+
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" className="w-full">
                                     Register
