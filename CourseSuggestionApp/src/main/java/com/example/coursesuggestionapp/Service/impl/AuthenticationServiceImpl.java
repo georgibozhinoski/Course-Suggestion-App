@@ -8,7 +8,6 @@ import com.example.coursesuggestionapp.Models.Entities.User;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.AuthenticationService;
 import com.example.coursesuggestionapp.Service.JWTService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

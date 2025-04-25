@@ -8,22 +8,50 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @Entity
 @Data
 @Table(name = "_user")
 public class User implements UserDetails {
-
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "password")
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_has_interest",
+            joinColumns = @JoinColumn(name = "interest_id"),
+            inverseJoinColumns = @JoinColumn(name = "id")
+    )
+    private Set<Interest> interests = new HashSet<>();
+
+    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecommendationList> lists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "likedByUsers")
+    private Set<Comment> likedComments = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "major")
+    private StudyMajor studyMajor;
 
     @Enumerated(EnumType.STRING)
     private Role role;
