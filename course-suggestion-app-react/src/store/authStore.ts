@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import axios from '../api/axiosInstance.ts';
 
-interface AuthState {
-    token: string | null;
-    login: (email: string, password: string) => Promise<void>;
-    register: (user: RegisterBody) => Promise<void>;
-    logout: () => void;
-}
-
 interface RegisterBody {
     email: string;
     firstName: string;
     lastName: string;
     password: string;
+}
+
+interface AuthState {
+    token: string | null;
+    login: (email: string, password: string) => Promise<void>;
+    register: (user: RegisterBody | FormData) => Promise<void>;
+    logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -26,7 +26,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     },
 
     register: async (user) => {
-        await axios.post('/auth/register', user);
+        if (user instanceof FormData) {
+            await axios.post('/auth/register', user, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+        } else {
+            await axios.post('/auth/register', user);
+        }
     },
 
     logout: () => {
