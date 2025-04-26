@@ -17,7 +17,7 @@ import java.util.List;
 public class StudyMajor {
     @Id
     @Column(name = "major_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long majorId;
 
     @Column(name = "major_name", nullable = false)

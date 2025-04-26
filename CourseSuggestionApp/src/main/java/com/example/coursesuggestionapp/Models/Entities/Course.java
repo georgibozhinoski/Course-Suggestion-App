@@ -21,7 +21,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name = "course_name", nullable = false, length = 50)
+    @Column(name = "course_name", nullable = false, length = 250)
     private String courseName;
 
     @Column(name = "course_level", nullable = false, length = 10)
@@ -33,17 +33,17 @@ public class Course {
     @Column(name = "course_code", nullable = false, length = 10, unique = true)
     private String courseCode;
 
-    @Column(name = "course_goals", nullable = false, length = 500)
+    @Column(name = "course_goals", nullable = false, length = 3500)
     private String courseGoals;
 
-    @Column(name = "course_description", nullable = false, length = 1500)
+    @Column(name = "course_description", nullable = false, length = 3500)
     private String courseDescription;
 
     @Column(name = "credit_score", nullable = false)
     private Short creditScore;
 
-    @Column(name = "prerequisite_credits")
-    private Integer prerequisiteCredits;
+    @Column(name = "prerequisite_credits",length = 300)
+    private String prerequisiteCredits;
 
     @OneToMany(mappedBy = "course")
     private List<Comment> comments = new ArrayList<>();
@@ -56,6 +56,8 @@ public class Course {
 
     @ManyToMany(mappedBy = "courses")
     private Set<RecommendationList> recommendationLists = new HashSet<>();
+
+
 
     @ManyToMany
     @JoinTable(
@@ -72,6 +74,8 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "interest_id")
     )
     private Set<Interest> courses = new HashSet<>();
+
+
 
     public Course() {
 
