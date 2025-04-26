@@ -6,60 +6,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RegisterRequest {
-    private String firstName;
-    private String lastName;
+    private String first_name;
+    private String last_name;
+
     private String email;
     private String password;
+    private Long studyMajor;
+
     private MultipartFile transcriptPdf;
 
-    //Getter for  transcriptPdf
-    public MultipartFile getTranscriptPdf() {
-        return transcriptPdf;
-    }
-
-    //Setter for transcriptPdf
-    public void setTranscriptPdf(MultipartFile transcriptPdf) {
-        this.transcriptPdf = transcriptPdf;
-    }
-
-    // Getter for firstName
     public String getFirstName() {
-        return firstName;
+        return first_name;
     }
 
-    // Setter for firstName
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.first_name = first_name;
     }
 
-    // Getter for lastName
     public String getLastName() {
-        return lastName;
+        return last_name;
     }
 
-    // Setter for lastName
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.last_name = last_name;
     }
 
-    // Getter for email
-    public String getEmail() {
-        return email;
-    }
-
-    // Setter for email
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // Getter for password
-    public String getPassword() {
-        return password;
-    }
-
-    // Setter for password
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
 

@@ -23,6 +23,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const [confirmPassword, setConfirmPassword] = useState("");
   const [transcriptPdf, setTranscriptPdf] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [studyMajorId, setStudyMajorId] = useState(""); 
 
   const register = useAuthStore((s) => s.register);
   const navigate = useNavigate();
@@ -39,9 +40,10 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
       // Prepare FormData for multipart/form-data
       const formData = new FormData();
       formData.append("email", email);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
+      formData.append("first_name", firstName);
+      formData.append("last_name", lastName);
       formData.append("password", password);
+      formData.append("studyMajor", studyMajorId);
 
       if (transcriptPdf) {
         formData.append("transcriptPdf", transcriptPdf);
@@ -147,6 +149,29 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                   required
                 />
               </div>
+
+              <div className="grid gap-3">
+  <Label htmlFor="studyMajor">Study Major</Label>
+  <select
+    id="studyMajor"
+    value={studyMajorId}
+    onChange={(e) => {
+      setStudyMajorId(e.target.value);
+      setFormError(null);
+    }}
+    required
+    className="border rounded-md p-2"
+  >
+    <option value="">Select your major</option>
+    <option value="1">Software engineering and information systems</option>
+    <option value="2">Internet, networks and security</option>
+    <option value="3">Applied information technologies</option>
+    <option value="4">Informatics education</option>
+    <option value="5g">Computer engineering</option>
+    <option value="6">Computer science</option>
+    <option value="7">Professional programming studies</option>
+  </select>
+</div>
 
               {/* PDF Upload */}
               <div className="grid gap-3">

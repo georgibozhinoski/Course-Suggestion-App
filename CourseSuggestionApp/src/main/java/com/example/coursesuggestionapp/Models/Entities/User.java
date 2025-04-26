@@ -35,9 +35,9 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;;
 
     @ManyToOne
     @JoinColumn(name = "major", nullable = false)
