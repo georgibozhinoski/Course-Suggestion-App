@@ -1,10 +1,15 @@
 package com.example.coursesuggestionapp.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter @Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "professor")
 public class Professor {
@@ -21,4 +26,13 @@ public class Professor {
 
     @ManyToMany(mappedBy = "professors")
     private Set<Course> courses = new HashSet<>();
+
+    public Professor() {
+
+    }
+
+    public Professor(String professorName, String profEmail) {
+        this.professorName = professorName;
+        this.profEmail = profEmail;
+    }
 }

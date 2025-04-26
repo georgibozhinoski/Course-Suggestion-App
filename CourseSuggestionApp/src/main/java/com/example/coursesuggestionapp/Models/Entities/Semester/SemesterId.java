@@ -18,9 +18,8 @@ public class SemesterId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if(this == o) return true;
-        if(!(o instanceof SemesterId)) return false;
-        SemesterId that = (SemesterId) o;
-        return semesterNo == that.semesterNo && Objects.equals(studyMajorId, that.studyMajorId);
+        if(!(o instanceof SemesterId that)) return false;
+        return Objects.equals(semesterNo, that.semesterNo) && Objects.equals(studyMajorId, that.studyMajorId);
     }
 
     @Override

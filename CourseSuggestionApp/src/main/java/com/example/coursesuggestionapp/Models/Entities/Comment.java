@@ -1,11 +1,16 @@
 package com.example.coursesuggestionapp.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter @Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "comment")
 public class Comment {
@@ -20,6 +25,14 @@ public class Comment {
     @Column(name = "comment_content")
     private String commentContent;
 
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private User author;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
     @ManyToMany
     @JoinTable(
             name = "comment_liked_by",
@@ -28,11 +41,14 @@ public class Comment {
     )
     private Set<User> likedByUsers = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
-    private User author;
+    public Comment() {
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    }
+
+    public Comment(LocalDateTime commentDate, String commentContent, User author, Course course) {
+        this.commentDate = commentDate;
+        this.commentContent = commentContent;
+        this.author = author;
+        this.course = course;
+    }
 }

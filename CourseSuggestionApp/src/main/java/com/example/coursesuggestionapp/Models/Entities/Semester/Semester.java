@@ -3,11 +3,13 @@ package com.example.coursesuggestionapp.Models.Entities.Semester;
 import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Getter @Setter
 @Entity
 @Table(name = "semester")
 public class Semester {
@@ -40,4 +42,14 @@ public class Semester {
     )
     private Set<Course> courses = new HashSet<>();
 
+
+    public Semester() {
+
+    }
+
+    public Semester(StudyMajor studyMajor, Boolean isWinter, Integer numElectiveCourses) {
+        this.studyMajor = studyMajor;
+        this.isWinter = isWinter;
+        this.numElectiveCourses = numElectiveCourses;
+    }
 }

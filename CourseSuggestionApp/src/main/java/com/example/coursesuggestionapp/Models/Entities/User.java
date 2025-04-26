@@ -4,12 +4,15 @@ import com.example.coursesuggestionapp.Models.ENUM.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+@Getter @Setter
 @AllArgsConstructor
 @Entity
 @Data
@@ -20,17 +23,37 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "major", nullable = false)
+    private StudyMajor studyMajor;
+
+    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecommendationList> lists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CheatSheet> sheets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "likedByUsers")
+    private Set<Comment> likedComments = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -39,22 +62,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "id")
     )
     private Set<Interest> interests = new HashSet<>();
-
-    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecommendationList> lists = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author")
-    private List<Comment> comments = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "likedByUsers")
-    private Set<Comment> likedComments = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "major")
-    private StudyMajor studyMajor;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     public User() {
     }
@@ -101,32 +108,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFirstName(String firstName){
-        this.firstName=firstName;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName=lastName;
-    }
-
-    public Long getId() {return this.id;}
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public String getEmail() {
-        return this.email;
     }
 
 }

@@ -2,12 +2,17 @@ package com.example.coursesuggestionapp.Models.Entities;
 
 import com.example.coursesuggestionapp.Models.Entities.Semester.Semester;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter @Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "course")
 public class Course {
@@ -37,8 +42,20 @@ public class Course {
     @Column(name = "credit_score", nullable = false)
     private Short creditScore;
 
-    @Column(name = "prerequisit_credits")
-    private Integer prerequisitCredits;
+    @Column(name = "prerequisite_credits")
+    private Integer prerequisiteCredits;
+
+    @OneToMany(mappedBy = "course")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course")
+    private List<CheatSheet> sheets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "courses")
+    private Set<Semester> semesters = new HashSet<>();
+
+    @ManyToMany(mappedBy = "courses")
+    private Set<RecommendationList> recommendationLists = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -56,13 +73,18 @@ public class Course {
     )
     private Set<Interest> courses = new HashSet<>();
 
-    @OneToMany(mappedBy = "course")
-    private List<Comment> comments = new ArrayList<>();
+    public Course() {
 
-    @ManyToMany(mappedBy = "courses")
-    private Set<Semester> semesters = new HashSet<>();
+    }
 
-    @ManyToMany(mappedBy = "courses")
-    private Set<RecommendationList> recommendationLists = new HashSet<>();
+    public Course(String courseName, String courseLevel, boolean isWinter, String courseCode, String courseGoals, String courseDescription, Short creditScore) {
+        this.courseName = courseName;
+        this.courseLevel = courseLevel;
+        this.isWinter = isWinter;
+        this.courseCode = courseCode;
+        this.courseGoals = courseGoals;
+        this.courseDescription = courseDescription;
+        this.creditScore = creditScore;
+    }
 }
 
