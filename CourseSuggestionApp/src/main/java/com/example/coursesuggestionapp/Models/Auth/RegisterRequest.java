@@ -2,6 +2,7 @@ package com.example.coursesuggestionapp.Models.Auth;
 
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RegisterRequest {
@@ -9,6 +10,17 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
+    private MultipartFile transcriptPdf;
+
+    //Getter for  transcriptPdf
+    public MultipartFile getTranscriptPdf() {
+        return transcriptPdf;
+    }
+
+    //Setter for transcriptPdf
+    public void setTranscriptPdf(MultipartFile transcriptPdf) {
+        this.transcriptPdf = transcriptPdf;
+    }
 
     // Getter for firstName
     public String getFirstName() {

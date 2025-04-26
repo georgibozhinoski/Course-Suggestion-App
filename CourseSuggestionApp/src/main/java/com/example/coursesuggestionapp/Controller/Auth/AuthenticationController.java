@@ -4,11 +4,9 @@ import com.example.coursesuggestionapp.Models.Auth.AuthenticationRequest;
 import com.example.coursesuggestionapp.Models.Auth.AuthenticationResponse;
 import com.example.coursesuggestionapp.Models.Auth.RegisterRequest;
 import com.example.coursesuggestionapp.Service.AuthenticationService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
@@ -23,11 +21,12 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterRequest request) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> register(@ModelAttribute RegisterRequest request) {
         AuthenticationResponse response = authenticationService.register(request);
         return ResponseEntity.ok(Collections.singletonMap("token", response.getToken()));
     }
+
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {

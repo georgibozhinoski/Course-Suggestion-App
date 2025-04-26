@@ -32,7 +32,7 @@ docker run --name course-suggestion-db -e POSTGRES_USER=postgres -e POSTGRES_PAS
 Пошто немаме фронтенд за сега, можете да тестирате **регистрација на корисник** и **логирање** преку Postman.
 
 ### 1. **Регистрирање на корисник**
-- **Endpoint**: `POST http://localhost:8080/api/v1/auth/register`
+- **Endpoint**: `POST http://localhost:9090/api/v1/auth/register`
 - **Header**:
   - `Content-Type: application/json`
 - **Body** (raw JSON):
@@ -48,7 +48,7 @@ docker run --name course-suggestion-db -e POSTGRES_USER=postgres -e POSTGRES_PAS
 Овој ендпоинт создава нов корисник. По успешна регистрација, ќе се врати JWT токен, кој понатаму ќе се користи за аутентикација.
 
 ### 2. **Логирање на корисник**
-- **Endpoint**: `POST http://localhost:8080/api/v1/auth/authenticate`
+- **Endpoint**: `POST http://localhost:9090/api/v1/auth/authenticate`
 - **Header**:
   - `Content-Type: application/json`
 - **Body** (raw JSON):
@@ -62,7 +62,7 @@ docker run --name course-suggestion-db -e POSTGRES_USER=postgres -e POSTGRES_PAS
 Овој ендпоинт овозможува корисниците да се логираат. По успешна аутентикација, серверот ќе врати JWT токен, кој фронтенд тимот ќе го чува и ќе го користи за пристап до заштитени рути.
 
 ### 3. **Пристап до заштитена рута**
-- **Endpoint**: `GET http://localhost:8080/api/v1/demo-controller`
+- **Endpoint**: `GET http://localhost:9090/api/v1/demo-controller`
 - **Header**:
   - `Authorization: Bearer <your_jwt_token_here>`
   

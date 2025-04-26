@@ -15,8 +15,11 @@ export default function Homepage() {
         }
     };
 
-    return <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-        <h1 className={"text-center"}> Placeholder homepage for logged in users</h1>
-        <button onClick={handleLogout}> Logout </button>
-    </div>
+    return (
+        <div className="flex min-h-svh w-full flex-col items-center justify-center p-6 md:p-10">
+          <h1 className="text-center mb-6">Placeholder homepage for logged in users</h1>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      );
+      
 }
