@@ -4,29 +4,64 @@ import com.example.coursesuggestionapp.Models.ENUM.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+@Getter @Setter
 @AllArgsConstructor
 @Entity
 @Data
 @Table(name = "_user")
 public class User implements UserDetails {
-
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "major", nullable = false)
+    private StudyMajor studyMajor;
+
+    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecommendationList> lists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CheatSheet> sheets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "likedByUsers")
+    private Set<Comment> likedComments = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_has_interest",
+            joinColumns = @JoinColumn(name = "interest_id"),
+            inverseJoinColumns = @JoinColumn(name = "id")
+    )
+    private Set<Interest> interests = new HashSet<>();
 
     public User() {
     }
@@ -73,32 +108,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFirstName(String firstName){
-        this.firstName=firstName;
-    }
-
-    public void setLastName(String lastName){
-        this.lastName=lastName;
-    }
-
-    public Long getId() {return this.id;}
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public String getEmail() {
-        return this.email;
     }
 
 }

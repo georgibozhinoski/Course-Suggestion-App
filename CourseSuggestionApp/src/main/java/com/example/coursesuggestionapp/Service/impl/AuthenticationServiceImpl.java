@@ -107,7 +107,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return subjects;
     }
 
-
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
