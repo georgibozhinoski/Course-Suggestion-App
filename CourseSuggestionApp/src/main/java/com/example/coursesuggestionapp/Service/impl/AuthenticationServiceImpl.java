@@ -4,7 +4,9 @@ import com.example.coursesuggestionapp.Models.Auth.AuthenticationRequest;
 import com.example.coursesuggestionapp.Models.Auth.AuthenticationResponse;
 import com.example.coursesuggestionapp.Models.Auth.RegisterRequest;
 import com.example.coursesuggestionapp.Models.ENUM.Role;
+import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
 import com.example.coursesuggestionapp.Models.Entities.User;
+import com.example.coursesuggestionapp.Repository.StudyMajorRepository;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.AuthenticationService;
 import com.example.coursesuggestionapp.Service.JWTService;
@@ -35,12 +37,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
-
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService,AuthenticationManager authenticationManager) {
+    private final StudyMajorRepository studyMajorRepository;
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager, StudyMajorRepository studyMajorRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.studyMajorRepository = studyMajorRepository;
     }
 
 
@@ -50,6 +53,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Email already taken");
         }
 
+        if (request.getStudyMajor() == null) {
+            throw new IllegalArgumentException("You must select a study major");
+        }
+
+        StudyMajor studyMajor = studyMajorRepository.findById(request.getStudyMajor())
+                .orElseThrow(() -> new IllegalArgumentException("Study major not found"));
+
         var user = new User(
                 request.getFirstName(),
                 request.getLastName(),
@@ -57,6 +67,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 passwordEncoder.encode(request.getPassword()),
                 Role.USER
         );
+
+        user.setStudyMajor(studyMajor);
 
         userRepository.save(user);
 

@@ -18,10 +18,10 @@ public class Professor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long professorId;
 
-    @Column(name = "professor_name", nullable = false, length = 50)
+    @Column(name = "professor_name", nullable = false, length = 250)
     private String professorName;
 
-    @Column(name = "prof_email", nullable = false, length = 50)
+    @Column(name = "prof_email", nullable = true, length = 50)
     private String profEmail;
 
     @ManyToMany(mappedBy = "professors")

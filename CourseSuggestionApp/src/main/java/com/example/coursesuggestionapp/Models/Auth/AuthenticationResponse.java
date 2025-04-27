@@ -1,13 +1,6 @@
 package com.example.coursesuggestionapp.Models.Auth;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +16,4 @@ public class AuthenticationResponse {
         this.token = token;
     }
 
-    public String getToken(){
-        return token;
-    }
 }
