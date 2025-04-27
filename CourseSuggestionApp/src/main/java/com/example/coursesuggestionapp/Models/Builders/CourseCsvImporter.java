@@ -42,11 +42,21 @@ public class CourseCsvImporter {
 
             String[] line;
             while ((line = csvReader.readNext()) != null) {
-                Course course = parseCourseFromCsvLine(line);
-                if (course != null) {
-                    courseRepository.save(course);
-                    assignCourseToSemesters(course, studyMajor);
+                String courseCode = line[4];
+                Optional<Course> existingCourseOpt = courseRepository.findByCourseCode(courseCode);
 
+                Course course;
+                if (existingCourseOpt.isPresent()) {
+                    course = existingCourseOpt.get();
+                } else {
+                    course = parseCourseFromCsvLine(line);
+                    if (course == null) continue;
+                    courseRepository.save(course);
+                }
+
+                String mandatoryField = line.length > 10 ? line[10].trim() : "No";
+                if ("Yes".equalsIgnoreCase(mandatoryField)) {
+                    assignCourseToSemesters(course, studyMajor);
                 }
             }
         }
