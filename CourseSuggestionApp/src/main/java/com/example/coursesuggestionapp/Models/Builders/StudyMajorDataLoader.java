@@ -22,7 +22,24 @@ public class StudyMajorDataLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        entityManager.createNativeQuery("ALTER TABLE study_major ALTER COLUMN major_id RESTART WITH 1").executeUpdate();
+
+        try {
+            String dialect = entityManager.getEntityManagerFactory()
+                    .getProperties()
+                    .get("hibernate.dialect")
+                    .toString();
+
+            if (dialect.contains("SQLServer")) {
+                // SQL Server reset identity
+                entityManager.createNativeQuery("DBCC CHECKIDENT ('study_major', RESEED, 1)").executeUpdate();
+            } else if (dialect.contains("PostgreSQL")) {
+                // PostgreSQL reset sequence
+                entityManager.createNativeQuery("ALTER SEQUENCE study_major_major_id_seq RESTART WITH 1").executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 
         if (studyMajorRepository.count() == 0) {

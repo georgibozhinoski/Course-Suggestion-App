@@ -74,14 +74,10 @@ public class CourseDataLoader implements CommandLineRunner {
 
 
     private String extractMajorNameFromCsvPath(String csvFilePath) {
-        // Remove folder path
         String fileName = Paths.get(csvFilePath).getFileName().toString();
-        // fileName example: "Software engineering and information systems(4years).csv"
 
-        // Remove the ".csv" extension
         String withoutExtension = fileName.replaceFirst("\\.csv$", "");
 
-        // Remove the suffix in parentheses (like "(4years)" or "(4годишни)")
         return withoutExtension.replaceAll("\\(.*\\)$", "").trim();
     }
 

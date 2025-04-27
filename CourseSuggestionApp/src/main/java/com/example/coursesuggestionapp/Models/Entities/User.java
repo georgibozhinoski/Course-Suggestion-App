@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourse;
 import java.util.*;
 
 @Getter @Setter
@@ -51,6 +51,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<CheatSheet> sheets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserCourse> passedCourses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedByUsers")
     private Set<Comment> likedComments = new HashSet<>();

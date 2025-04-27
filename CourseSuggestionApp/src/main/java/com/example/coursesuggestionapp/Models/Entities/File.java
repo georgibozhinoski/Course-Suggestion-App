@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @Entity
-@Table(name = "file")
+@Table(name = "[file]")
 public class File {
     @Id
     @Column(name = "file_id")

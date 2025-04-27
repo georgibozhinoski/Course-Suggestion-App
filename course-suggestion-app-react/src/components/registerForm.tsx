@@ -14,6 +14,7 @@ import { useAuthStore } from "@/store/authStore.ts";
 import { useNavigate } from "react-router";
 import { AxiosError } from "axios";
 import { FormError } from "./formError";
+import { Progress } from "@/components/ui/progress";
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
@@ -28,6 +29,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const register = useAuthStore((s) => s.register);
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+  const [progressValue, setProgressValue] = useState(0);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,6 +39,21 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
       setFormError("Passwords do not match");
       return;
     }
+
+    setLoading(true);
+    setProgressValue(10);  
+    const interval = setInterval(() => {
+      setProgressValue((prev) => {
+        if (prev >= 90) {
+          clearInterval(interval);
+          return 90;
+        }
+        return prev + 10;
+      });
+    }, 500);
+
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // fake delay
+
 
     try {
       // Prepare FormData for multipart/form-data
@@ -59,6 +78,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
         setFormError("Registration failed: Unknown error");
       }
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -202,8 +222,14 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                 <Button type="submit" className="w-full">
                   Register
                 </Button>
+                {loading && <Progress className="mt-1" value={progressValue} />}
+
+
+
+
               </div>
             </div>
+            
 
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
@@ -212,6 +238,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
               </a>
             </div>
           </form>
+
+          
         </CardContent>
       </Card>
     </div>

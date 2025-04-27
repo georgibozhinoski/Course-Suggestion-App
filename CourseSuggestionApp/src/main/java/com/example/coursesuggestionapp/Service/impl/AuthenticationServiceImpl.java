@@ -6,7 +6,10 @@ import com.example.coursesuggestionapp.Models.Auth.RegisterRequest;
 import com.example.coursesuggestionapp.Models.ENUM.Role;
 import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
 import com.example.coursesuggestionapp.Models.Entities.User;
+import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourse;
+import com.example.coursesuggestionapp.Repository.CourseRepository;
 import com.example.coursesuggestionapp.Repository.StudyMajorRepository;
+import com.example.coursesuggestionapp.Repository.UserCourseRepository;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.AuthenticationService;
 import com.example.coursesuggestionapp.Service.JWTService;
@@ -21,12 +24,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.coursesuggestionapp.Models.Entities.Course;
+import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourseId;
+
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,12 +41,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
     private final StudyMajorRepository studyMajorRepository;
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager, StudyMajorRepository studyMajorRepository) {
+    private final CourseRepository courseRepository;
+    private final UserCourseRepository userCourseRepository;
+
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager, StudyMajorRepository studyMajorRepository, CourseRepository courseRepository, UserCourseRepository userCourseRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.studyMajorRepository = studyMajorRepository;
+        this.courseRepository = courseRepository;
+        this.userCourseRepository = userCourseRepository;
     }
 
 
@@ -74,49 +82,59 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         MultipartFile file = request.getTranscriptPdf();
         if (file != null && !file.isEmpty()) {
-            List<Map<String, Object>> subjects = parseTranscriptPdfToJsonCompatibleList(file);
-
-            // Convert to JSON string
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(subjects);
-                System.out.println("Extracted Subjects JSON:\n" + json);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            List<UserCourse> savedUserCourses = parseAndSaveUserCoursesFromPdf(file, user);
+            System.out.println("Saved user courses: " + savedUserCourses);
+        } else {
+            System.out.println("No file uploaded or file is empty.");
         }
 
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 
-    private List<Map<String, Object>> parseTranscriptPdfToJsonCompatibleList(MultipartFile file) {
-        List<Map<String, Object>> subjects = new ArrayList<>();
+    public List<UserCourse> parseAndSaveUserCoursesFromPdf(MultipartFile file, User user) {
+        List<UserCourse> userCourses = new ArrayList<>();
 
-        try {
-            InputStream inputStream = file.getInputStream();
-            PDDocument document = PDDocument.load(inputStream);
+        try (InputStream inputStream = file.getInputStream();
+             PDDocument document = PDDocument.load(inputStream)) {
+
             PDFTextStripper stripper = new PDFTextStripper();
             String text = stripper.getText(document);
-            document.close();
 
             Pattern pattern = Pattern.compile("(\\d+)\\.\\s+(.*?)\\s+(\\d{1,2})\\s+(\\d{1,2}\\.\\d{2})");
             Matcher matcher = pattern.matcher(text);
 
             while (matcher.find()) {
-                Map<String, Object> subject = new HashMap<>();
-                subject.put("name", matcher.group(2).trim());
-                subject.put("grade", Integer.parseInt(matcher.group(3)));
-                subject.put("credits", Double.parseDouble(matcher.group(4)));
+                String courseName = matcher.group(2).trim();
+                Integer grade = Integer.parseInt(matcher.group(3));
 
-                subjects.add(subject);
+                Optional<Course> courseOpt = courseRepository.findByCourseName(courseName);
+                if (courseOpt.isEmpty()) {
+                    continue;
+                }
+                Course course = courseOpt.get();
+
+                UserCourseId userCourseId = new UserCourseId();
+                userCourseId.setUserId(user.getId());
+                userCourseId.setCourseId(course.getCourseId());
+
+                UserCourse userCourse = new UserCourse();
+                userCourse.setId(userCourseId);
+                userCourse.setUser(user);
+                userCourse.setCourse(course);
+                userCourse.setGrade(grade);
+
+                userCourseRepository.save(userCourse);
+
+                userCourses.add(userCourse);
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return subjects;
+        return userCourses;
     }
 
     @Override

@@ -30,13 +30,13 @@ public class SemesterDataLoader implements CommandLineRunner {
                     semesterId.setStudyMajorId(major.getMajorId());
                     semesterId.setSemesterNo(semesterNo);
 
-                    boolean isWinter = (semesterNo % 2 == 1);  // odd semesters are winter
+                    boolean isWinter = (semesterNo % 2 == 1);
 
                     Semester semester = new Semester();
                     semester.setSemesterId(semesterId);
                     semester.setStudyMajor(major);
                     semester.setIsWinter(isWinter);
-                    semester.setNumElectiveCourses(0);  // set default or as needed
+                    semester.setNumElectiveCourses(0);
 
                     semesterRepository.save(semester);
                 }
