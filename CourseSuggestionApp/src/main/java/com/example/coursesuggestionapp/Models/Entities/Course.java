@@ -1,6 +1,7 @@
 package com.example.coursesuggestionapp.Models.Entities;
 
 import com.example.coursesuggestionapp.Models.Entities.Semester.Semester;
+import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,6 +51,9 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private List<CheatSheet> sheets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course")
+    private List<UserCourse> passedCourses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "courses")
     private Set<Semester> semesters = new HashSet<>();

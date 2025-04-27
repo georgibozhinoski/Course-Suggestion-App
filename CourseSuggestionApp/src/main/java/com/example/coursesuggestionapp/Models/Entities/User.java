@@ -1,6 +1,7 @@
 package com.example.coursesuggestionapp.Models.Entities;
 
 import com.example.coursesuggestionapp.Models.ENUM.Role;
+import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,6 +52,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<CheatSheet> sheets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserCourse> passedCourses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedByUsers")
     private Set<Comment> likedComments = new HashSet<>();
