@@ -1,6 +1,7 @@
 package com.example.coursesuggestionapp.Controller.Course;
 
 import com.example.coursesuggestionapp.Models.DTO.CourseDTO;
+import com.example.coursesuggestionapp.Models.DTO.PassedCourseDTO;
 import com.example.coursesuggestionapp.Service.CourseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +25,10 @@ public class CourseController {
     @GetMapping("/by-major/{majorId}/elective/{levelNo}")
     public List<CourseDTO> getElectiveCoursesByMajorIdAndLevelNo(@PathVariable Long majorId, @PathVariable Integer levelNo) {
         return courseService.getElectiveCoursesByMajorIdAndLevelNo(majorId, levelNo);
+    }
+
+    @GetMapping("/passed-courses/user/{userId}")
+    public List<PassedCourseDTO> getPassedCoursesByUserId(@PathVariable Long userId) {
+        return courseService.getPassedCoursesByUserId(userId);
     }
 }

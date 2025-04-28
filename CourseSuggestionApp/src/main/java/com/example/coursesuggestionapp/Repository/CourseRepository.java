@@ -34,4 +34,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
         """)
     List<Course> findElectiveCoursesByMajorIdAndLevelNo(@Param("majorId") Long majorId, @Param("levelNo") Integer levelNo);
 
+    @Query(value = """
+    SELECT c.course_id, c.course_name, c.course_level, upc.grade
+    FROM course c
+    JOIN user_passed_course upc ON c.course_id = upc.course_id
+    WHERE upc.user_id = :userId
+    """, nativeQuery = true)
+    List<Object[]> findPassedCoursesWithGradeByUserId(@Param("userId") Long userId);
+
 }
