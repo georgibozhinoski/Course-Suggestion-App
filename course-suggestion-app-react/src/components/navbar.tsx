@@ -10,8 +10,10 @@ const centerMenuLinks = [
 
 export function Navbar() {
   const navButtonStyle = ({ isActive }: { isActive: boolean }) =>
-    (isActive ? "text-primary bg-white" : "text-white/70 bg-primary") +
-    " button inline-block h-10 rounded-md p-2 shadow text-center align-middle w-36 text-lg border-1 box-border transition";
+    (isActive
+      ? "text-primary bg-white hover:bg-gray-200"
+      : "text-white bg-primary hover:bg-gray-400") +
+    " button inline-block h-10 rounded-md p-2 text-center align-middle w-36 text-lg box-border transition";
 
   return (
     <>

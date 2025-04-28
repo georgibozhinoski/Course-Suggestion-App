@@ -42,7 +42,7 @@ export default function SearchPage() {
     // } else {
     //   console.error("User ID not found.");
     // }
-    setUserId(1);
+    setUserId(2);
   };
 
   const fetchUserMajorId = async () => {
@@ -133,7 +133,7 @@ export default function SearchPage() {
         </div>
       ) : (
         <>
-          <h1 className="text-3xl mb-6">Courses by Semester</h1>
+          <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
           <div className="space-y-8">
             {semesterCourses.map((semesterData) => (
               <div key={semesterData.semesterNo}>
