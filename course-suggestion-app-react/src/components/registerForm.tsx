@@ -52,11 +52,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
       });
     }, 500);
 
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // fake delay
-
 
     try {
-      // Prepare FormData for multipart/form-data
       const formData = new FormData();
       formData.append("email", email);
       formData.append("first_name", firstName);
@@ -68,7 +65,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
         formData.append("transcriptPdf", transcriptPdf);
       }
 
-      await register(formData); // Make sure your register action supports FormData
+      await register(formData); 
 
       navigate("/login");
     } catch (error: unknown) {
