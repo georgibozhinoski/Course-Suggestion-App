@@ -81,7 +81,7 @@ export default function Homepage() {
           </div>
         </div>
       ) : passedCourses.length === 0 ? (
-        <div className="text-center mt-6">
+        <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
           <p>First upload your certificate of passing exams!</p>
         </div>
