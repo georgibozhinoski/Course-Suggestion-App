@@ -90,21 +90,24 @@ export default function SearchPage() {
 
       const coursesForAllSemesters: SemesterCourses[] = [];
 
-      for (let semesterNo = 1; semesterNo <= 8; semesterNo++) {
-        try {
-          const response = await axiosInstance.get(
-            `http://localhost:9090/api/v1/courses/by-major/${majorId}/semester/${semesterNo}`
-          );
-          coursesForAllSemesters.push({
-            semesterNo,
-            courses: response.data,
-          });
-        } catch (error) {
-          console.error(
-            `Failed to fetch courses for semester ${semesterNo}`,
-            error
-          );
-        }
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(
+          `http://localhost:9090/api/v1/courses/by-major/${majorId}/all`
+        );
+
+        Object.entries(response.data as Record<string, Course[]>).forEach(
+          ([semesterNo, courses]: [string, Course[]]) => {
+            coursesForAllSemesters.push({
+              semesterNo: +semesterNo,
+              courses,
+            });
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
 
       setSemesterCourses(coursesForAllSemesters);
@@ -116,22 +119,69 @@ export default function SearchPage() {
 
   return (
     <div className="pt-25 text-center mx-[15%] pb-10 min-h-svh">
-      {loading ? (
-        <Spinner />
-      ) : (
-        <>
-          <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
-          <div className="space-y-8">
-            {semesterCourses.map((semesterData) => (
-              <div key={semesterData.semesterNo}>
-                <h2
-                  className="text-2xl  mb-4 text-left"
-                  style={{ marginLeft: "-30px" }}
-                >
-                  <span className="text-black">
-                    {semesterNames[semesterData.semesterNo - 1]}
-                  </span>
-                </h2>
+      <>
+        <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
+        <div className="space-y-8">
+          {semesterCourses.map((semesterData) => (
+            <div key={semesterData.semesterNo}>
+              <h2
+                className="text-2xl  mb-4 text-left"
+                style={{ marginLeft: "-30px" }}
+              >
+                <span className="text-black">
+                  {semesterNames[semesterData.semesterNo - 1]}
+                </span>
+              </h2>
+              <div className="bg-white p-3 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
+                <div className="overflow-x-auto">
+                  <table className="text-black min-w-full table-auto border-collapse border-none">
+                    <thead>
+                      <tr className="bg-white">
+                        <th className="px-4 py-2 border-b border-gray-300 w-[10%]">
+                          #
+                        </th>
+                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%]">
+                          Course Name
+                        </th>
+                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%]">
+                          Course Level
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {semesterData.courses.map((course, index) => (
+                        <tr
+                          key={course.courseId}
+                          className="bg-white cursor-pointer hover:bg-gray-100"
+                        >
+                          <td className="px-4 py-2">{index + 1}</td>
+                          <td className="text-left px-4 py-2 border-l border-gray-300">
+                            {course.courseName}
+                          </td>
+                          <td className="text-left px-4 py-2 border-l border-gray-300">
+                            L{course.courseLevel}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div>
+            <h2
+              className="text-2xl mb-4 text-left"
+              style={{ marginLeft: "-30px" }}
+            >
+              <span className="text-black">Elective Courses</span>
+            </h2>
+            {electiveCourses.map((electiveData) => (
+              <div key={electiveData.levelNo}>
+                <h3 className="text-xl mb-4 text-center mt-4 text-black">
+                  Level {electiveData.levelNo}
+                </h3>
                 <div className="bg-white p-3 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
                   <div className="overflow-x-auto">
                     <table className="text-black min-w-full table-auto border-collapse border-none">
@@ -149,7 +199,7 @@ export default function SearchPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {semesterData.courses.map((course, index) => (
+                        {electiveData.courses.map((course, index) => (
                           <tr
                             key={course.courseId}
                             className="bg-white cursor-pointer hover:bg-gray-100"
@@ -169,60 +219,10 @@ export default function SearchPage() {
                 </div>
               </div>
             ))}
-
-            <div>
-              <h2
-                className="text-2xl mb-4 text-left"
-                style={{ marginLeft: "-30px" }}
-              >
-                <span className="text-black">Elective Courses</span>
-              </h2>
-              {electiveCourses.map((electiveData) => (
-                <div key={electiveData.levelNo}>
-                  <h3 className="text-xl mb-4 text-center mt-4 text-black">
-                    Level {electiveData.levelNo}
-                  </h3>
-                  <div className="bg-white p-3 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
-                    <div className="overflow-x-auto">
-                      <table className="text-black min-w-full table-auto border-collapse border-none">
-                        <thead>
-                          <tr className="bg-white">
-                            <th className="px-4 py-2 border-b border-gray-300 w-[10%]">
-                              #
-                            </th>
-                            <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%]">
-                              Course Name
-                            </th>
-                            <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%]">
-                              Course Level
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {electiveData.courses.map((course, index) => (
-                            <tr
-                              key={course.courseId}
-                              className="bg-white cursor-pointer hover:bg-gray-100"
-                            >
-                              <td className="px-4 py-2">{index + 1}</td>
-                              <td className="text-left px-4 py-2 border-l border-gray-300">
-                                {course.courseName}
-                              </td>
-                              <td className="text-left px-4 py-2 border-l border-gray-300">
-                                L{course.courseLevel}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
+      {loading && <Spinner />}
     </div>
   );
 }
