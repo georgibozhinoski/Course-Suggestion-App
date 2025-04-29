@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourse;
 import java.util.*;
 
-@Getter @Setter
 @AllArgsConstructor
 @Entity
 @Data

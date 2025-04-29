@@ -89,7 +89,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        return new AuthenticationResponse(jwtToken, user.getId());
     }
 
     public List<UserCourse> parseAndSaveUserCoursesFromPdf(MultipartFile file, User user) {
@@ -148,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         var jwtToken = jwtService.generateToken(user);
-        AuthenticationResponse authResponse = new AuthenticationResponse(jwtToken);
+        AuthenticationResponse authResponse = new AuthenticationResponse(jwtToken, user.getId());
         return authResponse;
     }
 

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface StudyMajorRepository extends JpaRepository<StudyMajor, Long> {
 
     Optional<StudyMajor> findByMajorName(String majorName);
+    Optional<StudyMajor> findByMajorId(Long majorId);
 }

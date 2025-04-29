@@ -2,6 +2,7 @@ import {createBrowserRouter} from "react-router";
 import Login from "@/pages/login.tsx";
 import ProtectedRoute from "@/lib/protectedRoute.tsx";
 import Homepage from "@/pages/homepage.tsx";
+import ProfilePage from "@/pages/profile.tsx";
 import {Navbar} from "@/components/navbar.tsx";
 import NotFoundPage from "@/pages/404.tsx";
 import Register from "./pages/register";
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
             {
                 path: "search",
                 element: <Homepage/>
+            },
+            {
+                path: "profile",
+                element: <ProfilePage/>
             }
         ]
     },

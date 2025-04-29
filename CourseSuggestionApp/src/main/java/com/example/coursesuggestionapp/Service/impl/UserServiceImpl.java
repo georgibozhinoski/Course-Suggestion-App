@@ -3,23 +3,24 @@ package com.example.coursesuggestionapp.Service.impl;
 import com.example.coursesuggestionapp.Models.DTO.PasswordResetDTO;
 import com.example.coursesuggestionapp.Models.DTO.UserRequest;
 import com.example.coursesuggestionapp.Models.DTO.UserResponse;
+import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
 import com.example.coursesuggestionapp.Models.Entities.User;
+import com.example.coursesuggestionapp.Repository.StudyMajorRepository;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StudyMajorRepository studyMajorRepository;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public String passwordReset(PasswordResetDTO passwordResetDTO) {
@@ -65,8 +66,12 @@ public class UserServiceImpl implements UserService {
         if (user.getNewLastName() != null) {
             u.setLastName(user.getNewLastName());
         }
+        if (user.getNewStudyMajorId() != null) {
+            StudyMajor major = studyMajorRepository.findByMajorId(user.getNewStudyMajorId()).orElseThrow(IllegalStateException::new);
+            u.setStudyMajor(major);
+        }
         userRepository.save(u);
-        return new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail());
+        return new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getStudyMajor().getMajorName());
     }
 
     @Override
@@ -81,6 +86,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse mapToUserResponse(User user) {
-        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
+        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getStudyMajor().getMajorName());
     }
 }

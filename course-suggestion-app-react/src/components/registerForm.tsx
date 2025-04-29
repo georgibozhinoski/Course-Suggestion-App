@@ -187,7 +187,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
     <option value="2">Интернет, мрежи и безбедност</option>
     <option value="3">Информатичка едукација</option>
     <option value="4">Компјутерски Науки</option>
-    <option value="5g">Компјутерско инженество</option>
+    <option value="5">Компјутерско инженество</option>
     <option value="6">Примена на информациски технологии</option>
     <option value="7">Стручни студии за програмирање</option>
   </select>
