@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
+import Spinner from "@/components/ui/spinner.tsx";
 
 interface Course {
   courseId: number;
@@ -121,17 +122,10 @@ export default function SearchPage() {
   }, [majorId]);
 
   return (
-    <div className="pt-32 text-center mx-[15%] pb-10">
-      {loading ? (
-        <div className="flex justify-center items-center h-[100vh] bg-white">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 border-4 border-t-4 border-gray-700 rounded-full animate-spin"></div>
-            <div className="text-xl text-gray-700 font-semibold">
-              Loading...
-            </div>
-          </div>
-        </div>
-      ) : (
+    <div className="pt-32 text-center mx-[15%] pb-10 min-h-svh">
+      {loading ?
+        <Spinner/>
+       : (
         <>
           <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
           <div className="space-y-8">

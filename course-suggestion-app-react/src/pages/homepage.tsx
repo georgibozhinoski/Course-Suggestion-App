@@ -3,6 +3,7 @@ import { useAuthStore } from "@/store/authStore.ts";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import openAEye from "@/assets/OpenAEye.png";
+import Spinner from "@/components/ui/spinner";
 
 interface PassedCourse {
   courseId: number;
@@ -72,14 +73,7 @@ export default function Homepage() {
       <button onClick={handleLogout}>Logout</button>
 
       {loading ? (
-        <div className="flex justify-center items-center h-[100vh] bg-white">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 border-4 border-t-4 border-gray-700 rounded-full animate-spin"></div>
-            <div className="text-xl text-gray-700 font-semibold">
-              Loading...
-            </div>
-          </div>
-        </div>
+        <Spinner/>
       ) : passedCourses.length === 0 ? (
         <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
