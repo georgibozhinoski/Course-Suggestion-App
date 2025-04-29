@@ -1,7 +1,9 @@
 package com.example.coursesuggestionapp.Service.impl;
 
 import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
+import com.example.coursesuggestionapp.Models.Entities.User;
 import com.example.coursesuggestionapp.Repository.StudyMajorRepository;
+import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.StudyMajorService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
