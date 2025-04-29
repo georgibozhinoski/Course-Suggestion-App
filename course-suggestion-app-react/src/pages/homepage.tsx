@@ -17,8 +17,9 @@ export default function Homepage() {
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
   const [passedCourses, setPassedCourses] = useState<PassedCourse[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const userId = useAuthStore((s) => s.userId);
 
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,33 +35,23 @@ export default function Homepage() {
     navigate("/recommend-courses");
   };
 
-  const fetchUserId = () => {
-    // Example: fetching from localStorage if you store userId there
-    // const storedUserId = localStorage.getItem("userId");
-    // if (storedUserId) {
-    //   setUserId(parseInt(storedUserId));
-    // }
-    setUserId(2); // Temporary hardcoded
-  };
-
   const fetchPassedCourses = async () => {
     if (userId === null) return;
 
     try {
-      const response = await axiosInstance.get(
+      setLoading(true);
+      await axiosInstance.get(
         `http://localhost:9090/api/v1/courses/passed-courses/user/${userId}`
-      );
-      setPassedCourses(response.data);
+      ).then(response => {
+        setPassedCourses(response.data);
+        setLoading(false);
+      })
     } catch (error) {
       console.error("Failed to fetch passed courses", error);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchUserId();
-  }, []);
 
   useEffect(() => {
     if (userId !== null) {

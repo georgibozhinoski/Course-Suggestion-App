@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import Spinner from "@/components/ui/spinner.tsx";
+import {useAuthStore} from "@/store/authStore.ts";
 
 interface Course {
   courseId: number;
@@ -22,8 +23,9 @@ export default function SearchPage() {
   const [semesterCourses, setSemesterCourses] = useState<SemesterCourses[]>([]);
   const [electiveCourses, setElectiveCourses] = useState<ElectiveCourses[]>([]);
   const [majorId, setMajorId] = useState<number | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const userId = useAuthStore((s) => s.userId);
 
   const semesterNames: string[] = [
     "First Semester",
@@ -36,25 +38,20 @@ export default function SearchPage() {
     "Eighth Semester",
   ];
 
-  const fetchUserId = () => {
-    // const storedUserId = localStorage.getItem("userId");
-    // if (storedUserId) {
-    //   setUserId(parseInt(storedUserId));
-    // } else {
-    //   console.error("User ID not found.");
-    // }
-    setUserId(2);
-  };
 
   const fetchUserMajorId = async () => {
     if (userId) {
       try {
-        const response = await axiosInstance.get(
+        setLoading(true);
+        await axiosInstance.get(
           `http://localhost:9090/api/v1/study-major/${userId}`
-        );
-        setMajorId(response.data);
+        ).then(response => {
+          setMajorId(response.data);
+          setLoading(false);
+        });
       } catch (error) {
         console.error("Error fetching user major ID", error);
+        setLoading(false);
       }
     }
   };
@@ -64,6 +61,7 @@ export default function SearchPage() {
 
     const electiveCoursesWithAllLevels: ElectiveCourses[] = [];
 
+    setLoading(true);
     for (let levelNo = 1; levelNo <= 3; levelNo++) {
       try {
         const response = await axiosInstance.get(
@@ -80,10 +78,6 @@ export default function SearchPage() {
     setElectiveCourses(electiveCoursesWithAllLevels);
     setLoading(false);
   };
-
-  useEffect(() => {
-    fetchUserId();
-  }, []);
 
   useEffect(() => {
     if (userId) {
