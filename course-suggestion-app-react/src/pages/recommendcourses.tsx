@@ -8,9 +8,7 @@ export default function RecommendCourses() {
     >
       <h1 className=" text-center text-3xl mb-6">Recommend Elective Courses</h1>
       <div className="bg-white p-7 mt-6 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
-        {/* Filters in one row with space around */}
         <div className="flex justify-around space-x-6 border-gray-300">
-          {/* Semester Filter */}
           <div className="flex flex-col items-center space-y-2">
             <label className="text-lg font-medium">Select Semester</label>
             <div className="flex space-x-4">
@@ -47,7 +45,6 @@ export default function RecommendCourses() {
             </div>
           </div>
 
-          {/* Level Filter */}
           <div className="flex flex-col items-center space-y-2">
             <label className="text-lg font-medium">Select Level</label>
             <div className="flex space-x-4">
@@ -95,7 +92,6 @@ export default function RecommendCourses() {
           </div>
         </div>
 
-        {/* Course Search */}
         <div className="mt-6">
           <label className="block text-lg font-medium mb-2">
             Give your reasons
@@ -103,11 +99,10 @@ export default function RecommendCourses() {
           <textarea
             placeholder="Input more details (optional)"
             className="w-full p-3 rounded-lg border border-gray-300 resize-y"
-            rows={4} // Set initial rows as per your preference
+            rows={4}
           />
         </div>
 
-        {/* Generate List Button */}
         <div className="flex justify-center mt-10 mb-5">
           <button className="bg-primary text-white rounded-full py-2 px-6 text-lg hover:shadow-2xl transition duration-200 flex items-center space-x-2 cursor-pointer">
             <div className="pr-3">Generate list</div>
