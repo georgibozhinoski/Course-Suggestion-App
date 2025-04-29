@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import openAEye from "@/assets/OpenAEye.png";
 import Spinner from "@/components/ui/spinner";
-import { Link } from 'react-router-dom';
+import UploadCertificate from "@/components/uploadCertificate";
+import { useUserDataStore } from "@/store/userDataStore";
+import { UserInfo } from "@/store/userDataStore";
 
 interface PassedCourse {
   courseId: number;
@@ -18,38 +20,46 @@ export default function Homepage() {
   const navigate = useNavigate();
   const [passedCourses, setPassedCourses] = useState<PassedCourse[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const userDataStore = useUserDataStore();
   const userId = useAuthStore((s) => s.userId);
-
   const handleButtonClick = () => {
     navigate("/recommend-courses");
   };
 
   const fetchPassedCourses = async () => {
     if (userId === null) return;
-
+  
     try {
       setLoading(true);
-      await axiosInstance
-        .get(
-          `http://localhost:9090/api/v1/courses/passed-courses/user/${userId}`
-        )
-        .then((response) => {
-          setPassedCourses(response.data);
-          setLoading(false);
-        });
+      const response = await axiosInstance.get(
+        `/courses/passed-courses/user/${userId}`
+      );
+      setPassedCourses(response.data);
     } catch (error) {
       console.error("Failed to fetch passed courses", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
-    if (userId !== null) {
-      fetchPassedCourses();
-    }
+    const fetchData = async () => {
+      if (userId !== null) {
+        try {
+          await fetchPassedCourses();
+          const fullUser = await userDataStore.getUserInfo(userId);
+          setUserInfo(fullUser); 
+        } catch (err) {
+          console.error("Error loading data:", err);
+        }
+      }
+    };
+  
+    fetchData();
   }, [userId]);
+  
 
   return (
     <div className="flex min-h-svh w-full flex-col items-center justify-center p-6 md:p-10">
@@ -58,13 +68,16 @@ export default function Homepage() {
       ) : passedCourses.length === 0 ? (
         <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
-        <p>First upload your certificate of passing exams!</p>
+          <p>First upload your certificate of passing exams!</p>
+          <br/>
+       
+              {userInfo && (
+        <UploadCertificate
+          user={userInfo}
+          onSubmit={() => console.log("Certificate uploaded")}
+        />
+      )}
 
-        <Link to="/profile">
-          <button className="mt-4 bg-[#3a5a9f] hover:bg-[#99a1af] text-white font-semibold py-2 px-4 rounded transition">
-            Go to Profile
-          </button>
-        </Link>
           
         </div>
       ) : (

@@ -60,9 +60,9 @@ public class UserController {
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUser(
             @RequestParam("id") Long id,
-            @RequestParam("newFirstName") String newFirstName,
-            @RequestParam("newLastName") String newLastName,
-            @RequestParam("newStudyMajorId") Long newStudyMajorId,
+            @RequestParam(value ="newFirstName", required = false) String newFirstName,
+            @RequestParam(value ="newLastName", required = false) String newLastName,
+            @RequestParam(value ="newStudyMajorId",required = false) Long newStudyMajorId,
             @RequestPart(value = "transcriptPdf", required = false) MultipartFile transcriptPdf
     ) {
         if (transcriptPdf != null) {
@@ -72,6 +72,8 @@ public class UserController {
 
         User user = userRepository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id));
+
+        System.out.println("Received User: " + user);
 
         if (transcriptPdf != null && !transcriptPdf.isEmpty()) {
             String contentType = transcriptPdf.getContentType();
