@@ -16,7 +16,7 @@ export function Navbar() {
         + ' button inline-block h-10 rounded-md p-2 shadow text-center align-middle w-36 text-lg border-1 box-border transition'
 
     return <>
-        <div className={'h-20 bg-primary w-full block fixed'}>
+        <div className={'h-20 bg-primary w-full block fixed z-10'}>
             <div className={"w-full flex justify-between items-center px-10 top-10 absolute "}>
                 <img src={logo} alt="logo" className={"h-20 top-5 aspect-auto"}/>
                 <NavLink to="/profile">
@@ -26,12 +26,14 @@ export function Navbar() {
 
             <div className="flex space-x-4 w-2/3 left-1/6 gap-1 justify-center items-center top-10 h-20 absolute ">
                 {centerMenuLinks.map((link) =>
-                    <NavLink to={link.url} className={navButtonStyle}>
+                    <NavLink to={link.url} key={link.text} className={navButtonStyle}>
                         {link.text}
                     </NavLink>)}
             </div>
         </div>
 
-        <Outlet/>
+        <div className={'w-full h-full bg-muted absolute top-20'}>
+            <Outlet/>
+        </div>
     </>
 }
