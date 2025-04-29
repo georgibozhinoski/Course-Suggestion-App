@@ -14,22 +14,11 @@ interface PassedCourse {
 }
 
 export default function Homepage() {
-  const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
   const [passedCourses, setPassedCourses] = useState<PassedCourse[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const userId = useAuthStore((s) => s.userId);
-
-  const handleLogout = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      logout();
-      navigate("/login");
-    } catch {
-      alert("Logout failed");
-    }
-  };
 
   const handleButtonClick = () => {
     navigate("/recommend-courses");
