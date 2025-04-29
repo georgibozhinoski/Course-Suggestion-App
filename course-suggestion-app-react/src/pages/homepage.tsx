@@ -58,13 +58,13 @@ export default function Homepage() {
       ) : passedCourses.length === 0 ? (
         <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
-  <p>First upload your certificate of passing exams!</p>
+        <p>First upload your certificate of passing exams!</p>
 
-  <Link to="/profile">
-    <button className="mt-4 bg-[#9FCB8B] hover:bg-[#88b176] text-white font-semibold py-2 px-4 rounded transition">
-      Go to Profile
-    </button>
-  </Link>
+        <Link to="/profile">
+          <button className="mt-4 bg-[#3a5a9f] hover:bg-[#99a1af] text-white font-semibold py-2 px-4 rounded transition">
+            Go to Profile
+          </button>
+        </Link>
           
         </div>
       ) : (
