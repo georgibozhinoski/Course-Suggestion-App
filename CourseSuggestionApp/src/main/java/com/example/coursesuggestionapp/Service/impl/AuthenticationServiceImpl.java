@@ -13,8 +13,6 @@ import com.example.coursesuggestionapp.Repository.UserCourseRepository;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.AuthenticationService;
 import com.example.coursesuggestionapp.Service.JWTService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.UserCourse.UserCourseId;
@@ -82,17 +79,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         MultipartFile file = request.getTranscriptPdf();
         if (file != null && !file.isEmpty()) {
-            List<UserCourse> savedUserCourses = parseAndSaveUserCoursesFromPdf(file, user);
-            System.out.println("Saved user courses: " + savedUserCourses);
-        } else {
-            System.out.println("No file uploaded or file is empty.");
+            parseAndSaveUserCoursesFromPdf(file, user);
         }
 
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken, user.getId());
     }
 
-    public List<UserCourse> parseAndSaveUserCoursesFromPdf(MultipartFile file, User user) {
+    public void parseAndSaveUserCoursesFromPdf(MultipartFile file, User user) {
         List<UserCourse> userCourses = new ArrayList<>();
 
         try (InputStream inputStream = file.getInputStream();
@@ -134,7 +128,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             e.printStackTrace();
         }
 
-        return userCourses;
+        if (userCourses.isEmpty()) {
+            throw new IllegalArgumentException("No valid courses found in the PDF");
+        }
+
     }
 
     @Override

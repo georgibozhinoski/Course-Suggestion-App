@@ -17,7 +17,7 @@ export interface UpdatePasswordBody {
 
 interface UserDataState {
     getUserInfo: (userId: number) => Promise<UserInfo>;
-    updateUserInfo: (data: UpdateUserInfoBody) => Promise<void>;
+    updateUserInfo: (data: UpdateUserInfoBody, transcriptPdf?: File) => Promise<void>;
     updatePassword: (data: UpdatePasswordBody) => Promise<void>;
 }
 
@@ -29,8 +29,7 @@ export interface UpdateUserInfoBody {
 }
 
 export const useUserDataStore = create<UserDataState>(() => ({
-
-    getUserInfo: async (userId: number):Promise<UserInfo> => {
+    getUserInfo: async (userId: number): Promise<UserInfo> => {
         try {
             const res = await axios.get(`/user/${userId}`);
             return res.data;
@@ -40,9 +39,23 @@ export const useUserDataStore = create<UserDataState>(() => ({
         }
     },
 
-    updateUserInfo: async (data: UpdateUserInfoBody) => {
+    updateUserInfo: async (data: UpdateUserInfoBody, transcriptPdf?: File) => {
+        const formData = new FormData();
+        formData.append('id', String(data.id));
+        formData.append('newFirstName', data.newFirstName);
+        formData.append('newLastName', data.newLastName);
+        formData.append('newStudyMajorId', String(data.newStudyMajorId));
+
+        if (transcriptPdf) {
+            formData.append('transcriptPdf', transcriptPdf);
+        }
+
         try {
-            await axios.put('/user/update', data);
+            await axios.put('/user/update', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
         } catch (error) {
             console.error("Failed to update user info:", error);
             throw error;

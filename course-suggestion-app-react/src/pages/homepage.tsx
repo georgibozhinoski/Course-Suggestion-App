@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import openAEye from "@/assets/OpenAEye.png";
 import Spinner from "@/components/ui/spinner";
+import { Link } from 'react-router-dom';
 
 interface PassedCourse {
   courseId: number;
@@ -57,7 +58,14 @@ export default function Homepage() {
       ) : passedCourses.length === 0 ? (
         <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
-          <p>First upload your certificate of passing exams!</p>
+  <p>First upload your certificate of passing exams!</p>
+
+  <Link to="/profile">
+    <button className="mt-4 bg-[#9FCB8B] hover:bg-[#88b176] text-white font-semibold py-2 px-4 rounded transition">
+      Go to Profile
+    </button>
+  </Link>
+          
         </div>
       ) : (
         <div className="w-full md:w-8/9 lg:w-3/4 xl:w-2/3 mt-10 p-6 rounded-2xl">
