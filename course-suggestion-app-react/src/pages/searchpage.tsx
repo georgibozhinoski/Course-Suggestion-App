@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import Spinner from "@/components/ui/spinner.tsx";
-import {useAuthStore} from "@/store/authStore.ts";
+import { useAuthStore } from "@/store/authStore.ts";
 
 interface Course {
   courseId: number;
@@ -38,17 +38,16 @@ export default function SearchPage() {
     "Eighth Semester",
   ];
 
-
   const fetchUserMajorId = async () => {
     if (userId) {
       try {
         setLoading(true);
-        await axiosInstance.get(
-          `http://localhost:9090/api/v1/study-major/${userId}`
-        ).then(response => {
-          setMajorId(response.data);
-          setLoading(false);
-        });
+        await axiosInstance
+          .get(`http://localhost:9090/api/v1/study-major/${userId}`)
+          .then((response) => {
+            setMajorId(response.data);
+            setLoading(false);
+          });
       } catch (error) {
         console.error("Error fetching user major ID", error);
         setLoading(false);
@@ -116,10 +115,10 @@ export default function SearchPage() {
   }, [majorId]);
 
   return (
-    <div className="pt-32 text-center mx-[15%] pb-10 min-h-svh">
-      {loading ?
-        <Spinner/>
-       : (
+    <div className="pt-25 text-center mx-[15%] pb-10 min-h-svh">
+      {loading ? (
+        <Spinner />
+      ) : (
         <>
           <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
           <div className="space-y-8">

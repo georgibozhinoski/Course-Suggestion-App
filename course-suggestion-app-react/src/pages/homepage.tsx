@@ -40,12 +40,14 @@ export default function Homepage() {
 
     try {
       setLoading(true);
-      await axiosInstance.get(
-        `http://localhost:9090/api/v1/courses/passed-courses/user/${userId}`
-      ).then(response => {
-        setPassedCourses(response.data);
-        setLoading(false);
-      })
+      await axiosInstance
+        .get(
+          `http://localhost:9090/api/v1/courses/passed-courses/user/${userId}`
+        )
+        .then((response) => {
+          setPassedCourses(response.data);
+          setLoading(false);
+        });
     } catch (error) {
       console.error("Failed to fetch passed courses", error);
     } finally {
@@ -61,17 +63,15 @@ export default function Homepage() {
 
   return (
     <div className="flex min-h-svh w-full flex-col items-center justify-center p-6 md:p-10">
-      <button onClick={handleLogout}>Logout</button>
-
       {loading ? (
-        <Spinner/>
+        <Spinner />
       ) : passedCourses.length === 0 ? (
         <div className="text-black text-center mt-6">
           <p>No enough data about your courses...</p>
           <p>First upload your certificate of passing exams!</p>
         </div>
       ) : (
-        <div className="w-full md:w-8/9 lg:w-3/4 xl:w-2/3 mt-15 bg-white p-6 rounded-2xl">
+        <div className="w-full md:w-8/9 lg:w-3/4 xl:w-2/3 mt-10 p-6 rounded-2xl">
           <h1 className="text-3xl mb-10 text-center text-black">
             Your Passed Courses
           </h1>
