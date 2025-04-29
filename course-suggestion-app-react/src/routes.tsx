@@ -6,6 +6,8 @@ import ProfilePage from "@/pages/profile.tsx";
 import {Navbar} from "@/components/navbar.tsx";
 import NotFoundPage from "@/pages/404.tsx";
 import Register from "./pages/register";
+import SearchPage from "@/pages/searchpage.tsx";
+import RecommendCourses from "./pages/recommendcourses";
 
 export const router = createBrowserRouter([
     {
@@ -33,13 +35,17 @@ export const router = createBrowserRouter([
             },
             {
                 path: "search",
-                element: <Homepage/>
+                element:<SearchPage />,
+            },
+            {
+                path: "recommend-courses",
+                element: <RecommendCourses />,
             },
             {
                 path: "profile",
                 element: <ProfilePage/>
             }
-        ]
+        ],
     },
     {
         path: "*",

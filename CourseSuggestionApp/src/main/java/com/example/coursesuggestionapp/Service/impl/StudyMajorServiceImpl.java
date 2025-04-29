@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class StudyMajorServiceImpl implements StudyMajorService {
     private final StudyMajorRepository repository;
+    private final UserRepository userRepository;
 
     @Override
     public StudyMajor findByMajorName(String majorName) {
@@ -20,4 +21,18 @@ public class StudyMajorServiceImpl implements StudyMajorService {
     public StudyMajor findByMajorId(Long majorId) {
         return repository.findByMajorId(majorId).orElseThrow(IllegalArgumentException::new);
     }
+
+    @Override
+        public Long getStudyMajorIdByUserId(Long userId) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+            StudyMajor studyMajor = user.getStudyMajor();
+
+            if (studyMajor == null) {
+                throw new RuntimeException("Study Major not found for user with id " + userId);
+            }
+
+            return studyMajor.getMajorId();
+        }
 }

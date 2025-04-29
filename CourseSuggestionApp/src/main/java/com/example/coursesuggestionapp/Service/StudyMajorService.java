@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface StudyMajorService {
     StudyMajor findByMajorName(String majorName);
     StudyMajor findByMajorId(Long majorId);
+    Long getStudyMajorIdByUserId(Long userId);
 }
