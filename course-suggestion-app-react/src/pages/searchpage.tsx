@@ -43,7 +43,7 @@ export default function SearchPage() {
       try {
         setLoading(true);
         await axiosInstance
-          .get(`http://localhost:9090/api/v1/study-major/${userId}`)
+          .get(`/study-major/${userId}`)
           .then((response) => {
             setMajorId(response.data);
             setLoading(false);
@@ -64,7 +64,7 @@ export default function SearchPage() {
     for (let levelNo = 1; levelNo <= 3; levelNo++) {
       try {
         const response = await axiosInstance.get(
-          `http://localhost:9090/api/v1/courses/by-major/${majorId}/elective/${levelNo}`
+          `courses/by-major/${majorId}/elective/${levelNo}`
         );
         electiveCoursesWithAllLevels.push({
           levelNo,
@@ -93,7 +93,7 @@ export default function SearchPage() {
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `http://localhost:9090/api/v1/courses/by-major/${majorId}/all`
+          `/courses/by-major/${majorId}/all`
         );
 
         Object.entries(response.data as Record<string, Course[]>).forEach(
