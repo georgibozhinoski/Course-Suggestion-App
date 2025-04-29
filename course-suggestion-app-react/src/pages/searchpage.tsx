@@ -91,22 +91,28 @@ export default function SearchPage() {
 
       const coursesForAllSemesters: SemesterCourses[] = [];
 
-      for (let semesterNo = 1; semesterNo <= 8; semesterNo++) {
         try {
+          setLoading(true);
           const response = await axiosInstance.get(
-            `http://localhost:9090/api/v1/courses/by-major/${majorId}/semester/${semesterNo}`
+            `http://localhost:9090/api/v1/courses/by-major/${majorId}/all`
           );
-          coursesForAllSemesters.push({
-            semesterNo,
-            courses: response.data,
-          });
+          console.log(response.data);
+
+          Object.entries(response.data as Record<string, Course[]>)
+              .forEach(([semesterNo, courses]:[string, Course[]]) => {
+            coursesForAllSemesters.push({
+                semesterNo: +semesterNo,
+                courses,
+              });
+          })
         } catch (error) {
           console.error(
-            `Failed to fetch courses for semester ${semesterNo}`,
             error
           );
+        } finally {
+          setLoading(false);
         }
-      }
+
 
       setSemesterCourses(coursesForAllSemesters);
       fetchElectiveCourses();
@@ -117,9 +123,6 @@ export default function SearchPage() {
 
   return (
     <div className="pt-32 text-center mx-[15%] pb-10 min-h-svh">
-      {loading ?
-        <Spinner/>
-       : (
         <>
           <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
           <div className="space-y-8">
@@ -223,7 +226,7 @@ export default function SearchPage() {
             </div>
           </div>
         </>
-      )}
+      {loading && <Spinner/>}
     </div>
   );
 }

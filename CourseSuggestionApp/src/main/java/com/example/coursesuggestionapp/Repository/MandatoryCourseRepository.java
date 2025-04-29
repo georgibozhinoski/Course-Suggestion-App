@@ -10,4 +10,6 @@ public interface MandatoryCourseRepository extends JpaRepository<MandatoryCourse
 
     @Query("SELECT mc.courseId FROM MandatoryCourse mc")
     List<Long> findAllMandatoryCourseIds();
+
+    List<MandatoryCourse> findAllByMajorId(Long majorId);
 }

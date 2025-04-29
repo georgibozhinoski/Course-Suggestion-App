@@ -6,6 +6,7 @@ import com.example.coursesuggestionapp.Service.CourseService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/courses")
@@ -30,5 +31,10 @@ public class CourseController {
     @GetMapping("/passed-courses/user/{userId}")
     public List<PassedCourseDTO> getPassedCoursesByUserId(@PathVariable Long userId) {
         return courseService.getPassedCoursesByUserId(userId);
+    }
+
+    @GetMapping("/by-major/{majorId}/all")
+    public Map<Integer, List<CourseDTO>> getMandatoryCoursesByMajorId(@PathVariable Long majorId) {
+        return courseService.getCoursesByMajorId(majorId);
     }
 }
