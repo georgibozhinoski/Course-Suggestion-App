@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/resetPassword")
+    @PutMapping("/change-password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetDTO passwordResetDTO) {
         return ResponseEntity.ok(userService.passwordReset(passwordResetDTO));
     }
