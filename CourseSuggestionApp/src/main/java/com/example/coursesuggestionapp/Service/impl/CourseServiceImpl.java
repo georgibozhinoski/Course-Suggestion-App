@@ -1,12 +1,17 @@
 package com.example.coursesuggestionapp.Service.impl;
 
 import com.example.coursesuggestionapp.Models.DTO.CourseDTO;
+import com.example.coursesuggestionapp.Models.DTO.CourseInfoDTO;
 import com.example.coursesuggestionapp.Models.DTO.PassedCourseDTO;
 import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.MandatoryCourse.MandatoryCourse;
+import com.example.coursesuggestionapp.Models.Entities.User;
 import com.example.coursesuggestionapp.Repository.CourseRepository;
 import com.example.coursesuggestionapp.Repository.MandatoryCourseRepository;
 import com.example.coursesuggestionapp.Service.CourseService;
+import com.example.coursesuggestionapp.Service.RatingService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,11 +22,14 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final MandatoryCourseRepository mandatoryCourseRepository;
+    private final RatingService ratingService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, MandatoryCourseRepository mandatoryCourseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, MandatoryCourseRepository mandatoryCourseRepository, RatingService ratingService) {
         this.courseRepository = courseRepository;
         this.mandatoryCourseRepository = mandatoryCourseRepository;
+        this.ratingService = ratingService;
     }
+
     @Override
     public List<CourseDTO> getCoursesByMajorIdAndSemesterNo(Long majorId, Integer semesterNo) {
         List<Course> courses = courseRepository.findCoursesByMajorIdAndSemesterNo(majorId, semesterNo);
@@ -60,6 +68,30 @@ public class CourseServiceImpl implements CourseService {
                     return new PassedCourseDTO(courseId, courseName, courseLevel, type, grade);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CourseInfoDTO getCourseDetails(Long courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getId();
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Double avgRating = ratingService.getCourseRating(courseId);
+        Integer userRating = ratingService.getUserRatingForCourse(courseId, userId);
+
+        return new CourseInfoDTO(course, avgRating, userRating);
+    }
+
+    @Override
+    public void rateCourse(Long courseId, int rating) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getId();
+
+        ratingService.rateCourse(userId, courseId, rating);
     }
 
     private List<Long> getMandatoryCourseIds() {

@@ -1,6 +1,7 @@
 package com.example.coursesuggestionapp.Service;
 
 import com.example.coursesuggestionapp.Models.DTO.CourseDTO;
+import com.example.coursesuggestionapp.Models.DTO.CourseInfoDTO;
 import com.example.coursesuggestionapp.Models.DTO.PassedCourseDTO;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface CourseService {
     Map<Integer, List<CourseDTO>> getCoursesByMajorId(Long majorId);
     List<CourseDTO> getElectiveCoursesByMajorIdAndLevelNo(Long majorId, Integer levelNo);
     List<PassedCourseDTO> getPassedCoursesByUserId(Long userId);
+    CourseInfoDTO getCourseDetails(Long courseId);
+    void rateCourse(Long courseId, int rating);
 }

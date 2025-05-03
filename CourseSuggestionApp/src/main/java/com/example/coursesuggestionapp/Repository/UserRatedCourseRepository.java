@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRatedCourseRepository extends JpaRepository<UserRatedCourse, UserRatedCourseId> {
-    Optional<Object> findByUserIdAndCourseId(Long userId, Long courseId);
+    Optional<UserRatedCourse> findByUser_IdAndCourse_CourseId(Long userId, Long courseId);
 
     @Query("SELECT AVG(urc.rating) FROM UserRatedCourse urc WHERE urc.course.courseId = :courseId")
     Double findAverageRatingByCourseId(@Param("courseId") Long courseId);

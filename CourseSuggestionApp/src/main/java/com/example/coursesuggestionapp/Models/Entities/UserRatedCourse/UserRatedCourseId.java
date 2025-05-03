@@ -13,6 +13,7 @@ public class UserRatedCourseId implements Serializable {
     @Column
     private Long courseId;
 
+    public UserRatedCourseId(){}
     public UserRatedCourseId(Long userId, Long courseId) {
         this.userId = userId;
         this.courseId = courseId;

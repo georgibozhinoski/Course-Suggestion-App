@@ -8,7 +8,11 @@ import com.example.coursesuggestionapp.Repository.CourseRepository;
 import com.example.coursesuggestionapp.Repository.UserRatedCourseRepository;
 import com.example.coursesuggestionapp.Repository.UserRepository;
 import com.example.coursesuggestionapp.Service.RatingService;
+import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+@Service
 public class RatingServiceImpl implements RatingService {
     private final UserRatedCourseRepository repository;
     private final UserRepository userRepository;
@@ -24,23 +28,33 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void rateCourse(Long userId, Long courseId, Integer rating) {
-        if (repository.findByUserIdAndCourseId(userId, courseId).isPresent()) {
-            throw new IllegalArgumentException("User has already rated this course");
+        Optional<UserRatedCourse> existingRating = repository.findByUser_IdAndCourse_CourseId(userId, courseId);
+
+        if (existingRating.isPresent()) {
+            existingRating.get().setRating(rating);
+            repository.save(existingRating.get());
         }
+        else{
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-
-        UserRatedCourseId id = new UserRatedCourseId(userId, courseId);
-        UserRatedCourse userRatedCourse = new UserRatedCourse(user, course, rating);
-        userRatedCourse.setId(id);
-        repository.save(userRatedCourse);
+            UserRatedCourseId id = new UserRatedCourseId(userId, courseId);
+            UserRatedCourse userRatedCourse = new UserRatedCourse(user, course, rating);
+            userRatedCourse.setId(id);
+            repository.save(userRatedCourse);
+        }
     }
 
     @Override
     public Double getCourseRating(Long courseId){
         return repository.findAverageRatingByCourseId(courseId);
+    }
+
+    @Override
+    public Integer getUserRatingForCourse(Long courseId, Long userId){
+        Optional<UserRatedCourse> userRatedCourse = repository.findByUser_IdAndCourse_CourseId(userId, courseId);
+        return userRatedCourse.map(UserRatedCourse::getRating).orElse(null);
     }
 }
