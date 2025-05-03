@@ -1,6 +1,7 @@
 package com.example.coursesuggestionapp.Models.Entities;
 
 import com.example.coursesuggestionapp.Models.ENUM.Role;
+import com.example.coursesuggestionapp.Models.Entities.UserRatedCourse.UserRatedCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class User implements UserDetails {
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;;
+    private Role role = Role.USER;
 
     @ManyToOne
     @JoinColumn(name = "major", nullable = false)
@@ -53,6 +54,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<UserCourse> passedCourses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRatedCourse> ratedCourses = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedByUsers")
     private Set<Comment> likedComments = new HashSet<>();
