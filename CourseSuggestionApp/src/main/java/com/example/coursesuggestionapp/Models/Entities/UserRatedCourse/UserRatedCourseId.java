@@ -13,6 +13,11 @@ public class UserRatedCourseId implements Serializable {
     @Column
     private Long courseId;
 
+    public UserRatedCourseId(Long userId, Long courseId) {
+        this.userId = userId;
+        this.courseId = courseId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

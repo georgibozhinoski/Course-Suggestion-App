@@ -3,10 +3,14 @@ package com.example.coursesuggestionapp.Models.Entities.UserRatedCourse;
 import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter @Getter
 @Entity
 @Table(name = "user_rated_course")
 public class UserRatedCourse {
+    @Setter
     @EmbeddedId
     private UserRatedCourseId id;
 
@@ -33,4 +37,5 @@ public class UserRatedCourse {
         this.course = course;
         this.rating = rating;
     }
+
 }
