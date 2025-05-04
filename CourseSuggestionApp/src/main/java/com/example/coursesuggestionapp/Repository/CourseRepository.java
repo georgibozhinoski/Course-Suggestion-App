@@ -42,4 +42,29 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     """, nativeQuery = true)
     List<Object[]> findPassedCoursesWithGradeByUserId(@Param("userId") Long userId);
 
+    @Query("""
+        SELECT c
+        FROM Course c
+        WHERE c.courseId NOT IN (
+            SELECT mc.courseId
+            FROM MandatoryCourse mc
+            WHERE mc.majorId = :majorId
+        )
+        AND c.courseLevel = :level
+        AND c.isWinter = true
+        """)
+    List<Course> findElectiveCoursesByMajorIdAndCourseLevelAndWinterIsTrue(Long majorId, int level);
+
+    @Query("""
+        SELECT c
+        FROM Course c
+        WHERE c.courseId NOT IN (
+            SELECT mc.courseId
+            FROM MandatoryCourse mc
+            WHERE mc.majorId = :majorId
+        )
+        AND c.courseLevel = :level
+        AND c.isWinter = false
+        """)
+    List<Course> findElectiveCoursesByMajorIdAndCourseLevelAndWinterIsFalse(Long majorId, int level);
 }
