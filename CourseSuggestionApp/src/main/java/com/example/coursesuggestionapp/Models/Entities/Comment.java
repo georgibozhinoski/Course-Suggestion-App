@@ -25,7 +25,7 @@ public class Comment {
     @Column(name = "comment_content")
     private String commentContent;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id", nullable = false)
     private User author;
 

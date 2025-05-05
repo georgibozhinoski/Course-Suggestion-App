@@ -1,7 +1,7 @@
 import axiosInstance from "../api/axiosInstance";
 import { useAuthStore } from "@/store/authStore.ts";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import openAEye from "@/assets/OpenAEye.png";
 import Spinner from "@/components/ui/spinner";
 import UploadCertificate from "@/components/uploadCertificate";
@@ -117,7 +117,7 @@ export default function Homepage() {
                         >
                           <td className="px-4 py-2">{index + 1}</td>
                           <td className="text-left px-4 py-2 border-l border-gray-300">
-                            {course.courseName}
+                            <Link to={`/thread/${course.courseId}`}>{course.courseName}</Link>
                           </td>
                           <td className="text-left px-4 py-2 border-l border-gray-300">
                             {course.courseLevel}

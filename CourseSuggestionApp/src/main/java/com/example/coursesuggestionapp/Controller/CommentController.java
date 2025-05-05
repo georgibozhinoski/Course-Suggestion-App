@@ -1,12 +1,14 @@
 package com.example.coursesuggestionapp.Controller;
 
 
+import com.example.coursesuggestionapp.Models.DTO.AddCommentDTO;
 import com.example.coursesuggestionapp.Models.DTO.CommentDTO;
 import com.example.coursesuggestionapp.Models.Entities.Comment;
 import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.User;
 import com.example.coursesuggestionapp.Repository.CourseRepository;
 import com.example.coursesuggestionapp.Service.CommentService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/v1/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -38,9 +40,10 @@ public class CommentController {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @PostMapping("/course/{courseId}")
     public Comment addComment (@PathVariable Long courseId,
-                               @RequestBody String commentContent,
+                               @RequestBody AddCommentDTO addCommentDTO,
                                @AuthenticationPrincipal User user) {
 
         Course course = courseRepository.findById(courseId)
@@ -48,7 +51,7 @@ public class CommentController {
 
         Comment comment = new Comment();
         comment.setCommentDate(LocalDateTime.now());
-        comment.setCommentContent(commentContent);
+        comment.setCommentContent(addCommentDTO.getCommentContent());
         comment.setAuthor(user);
         comment.setCourse(course);
 

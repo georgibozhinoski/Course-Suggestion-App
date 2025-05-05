@@ -24,7 +24,7 @@ public class Interest {
     @Column(name = "interest_description", length = 150)
     private String interestDescription;
 
-    @ManyToMany(mappedBy = "interests")
+    @ManyToMany(mappedBy = "interests",fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
     @ManyToMany(mappedBy = "courses")

@@ -39,29 +39,29 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "major", nullable = false)
     private StudyMajor studyMajor;
 
-    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<RecommendationList> lists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<CheatSheet> sheets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserCourse> passedCourses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserRatedCourse> ratedCourses = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "likedByUsers")
+    @ManyToMany(mappedBy = "likedByUsers", fetch = FetchType.EAGER)
     private Set<Comment> likedComments = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_has_interest",
             joinColumns = @JoinColumn(name = "interest_id"),

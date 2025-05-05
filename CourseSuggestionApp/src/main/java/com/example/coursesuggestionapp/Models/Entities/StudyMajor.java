@@ -26,7 +26,7 @@ public class StudyMajor {
     @Column(name = "accreditation_year", nullable = false)
     private Integer accreditationYear;
 
-    @OneToMany(mappedBy = "studyMajor")
+    @OneToMany(mappedBy = "studyMajor", fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     public StudyMajor() {
