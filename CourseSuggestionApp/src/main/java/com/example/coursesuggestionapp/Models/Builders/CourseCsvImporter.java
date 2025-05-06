@@ -38,6 +38,7 @@ public class CourseCsvImporter {
     @Transactional
     public void importCoursesFromCsv(InputStream csvInputStream, StudyMajor studyMajor) throws IOException, CsvValidationException {
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(csvInputStream, StandardCharsets.UTF_8))) {
+            String[] semesters = csvReader.readNext();
             String[] headers = csvReader.readNext();
 
             String[] line;
@@ -56,43 +57,27 @@ public class CourseCsvImporter {
 
                 String mandatoryField = line.length > 10 ? line[10].trim() : "No";
                 if ("Yes".equalsIgnoreCase(mandatoryField)) {
-                    assignCourseToSemesters(course, studyMajor);
+                    assignCourseToSemesters(course, studyMajor, semesters);
                 }
             }
         }
     }
 
-    private void assignCourseToSemesters(Course course, StudyMajor studyMajor) {
-        int level = Integer.parseInt(course.getCourseLevel());
-        boolean isWinter = course.isWinter();
-
-        List<Integer> semesterNumbers = new ArrayList<>();
-
-        if (level == 1) {
-            semesterNumbers.add(isWinter ? 1 : 2);
-        } else if (level == 2) {
-            semesterNumbers.add(isWinter ? 3 : 4);
-        } else if (level == 3) {
-            if (isWinter) {
-                semesterNumbers.add(5);
-                semesterNumbers.add(7);
-            } else {
-                semesterNumbers.add(6);
-                semesterNumbers.add(8);
-            }
-        }
-
-        for (Integer semesterNo : semesterNumbers) {
+    private void assignCourseToSemesters(Course course, StudyMajor studyMajor, String[] semesters) {
+        for (int i = 1; i <= semesters.length; i++) {
             SemesterId semesterId = new SemesterId();
             semesterId.setStudyMajorId(studyMajor.getMajorId());
-            semesterId.setSemesterNo(semesterNo);
+            semesterId.setSemesterNo(i);
 
             Optional<Semester> semesterOpt = semesterRepository.findById(semesterId);
             if (semesterOpt.isPresent()) {
                 Semester semester = semesterOpt.get();
-                semester.getCourses().add(course);
-                course.getSemesters().add(semester);
-                semesterRepository.save(semester); // persist the changes
+                if(Integer.parseInt(semesters[i-1])>semester.getCourses().size()){
+                    semester.getCourses().add(course);
+                    course.getSemesters().add(semester);
+                    semesterRepository.save(semester);
+                    break;
+                }
             } else {
                 System.err.println("Semester not found: " + semesterId);
             }
