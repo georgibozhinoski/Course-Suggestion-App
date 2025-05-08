@@ -8,6 +8,7 @@ import NotFoundPage from "@/pages/404.tsx";
 import Register from "./pages/register";
 import SearchPage from "@/pages/searchpage.tsx";
 import RecommendCourses from "./pages/recommendcourses";
+import ThreadPage from "./pages/threadpage";
 
 export const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
             {
                 path: "profile",
                 element: <ProfilePage/>
+            },
+            {
+                path: "thread/:id",
+                element: <ThreadPage/>
             }
         ],
     },
