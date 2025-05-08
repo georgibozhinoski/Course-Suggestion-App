@@ -120,7 +120,7 @@ export default function SearchPage() {
   return (
     <div className="pt-25 text-center mx-[15%] pb-10 min-h-svh">
       <>
-        <h1 className="text-black text-3xl mb-6">Courses by Semester</h1>
+        <h1 className="text-black text-3xl mb-6 dark:text-white">Courses by Semester</h1>
         <div className="space-y-8">
           {semesterCourses.map((semesterData) => (
             <div key={semesterData.semesterNo}>
@@ -128,22 +128,22 @@ export default function SearchPage() {
                 className="text-2xl  mb-4 text-left"
                 style={{ marginLeft: "-30px" }}
               >
-                <span className="text-black">
+                <span className="text-black dark:text-white">
                   {semesterNames[semesterData.semesterNo - 1]}
                 </span>
               </h2>
               <div className="bg-white p-3 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
                 <div className="overflow-x-auto">
-                  <table className="text-black min-w-full table-auto border-collapse border-none">
+                  <table className="text-black min-w-full table-auto border-collapse border-none dark:text-white">
                     <thead>
-                      <tr className="bg-white">
-                        <th className="px-4 py-2 border-b border-gray-300 w-[10%]">
+                      <tr className="bg-white dark:bg-gray-700">
+                        <th className="px-4 py-2 border-b border-gray-300 w-[10%] dark:border-gray-600 w-[10%]">
                           #
                         </th>
-                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%]">
+                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%] dark:border-gray-600 w-[70%]">
                           Course Name
                         </th>
-                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%]">
+                        <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%] dark:border-gray-600 w-[20%]">
                           Course Level
                         </th>
                       </tr>
@@ -152,13 +152,13 @@ export default function SearchPage() {
                       {semesterData.courses.map((course, index) => (
                         <tr
                           key={course.courseId}
-                          className="bg-white cursor-pointer hover:bg-gray-100"
+                          className="bg-white cursor-pointer hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700"
                         >
                           <td className="px-4 py-2">{index + 1}</td>
-                          <td className="text-left px-4 py-2 border-l border-gray-300">
+                          <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
                             {course.courseName}
                           </td>
-                          <td className="text-left px-4 py-2 border-l border-gray-300">
+                          <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
                             L{course.courseLevel}
                           </td>
                         </tr>
@@ -175,25 +175,25 @@ export default function SearchPage() {
               className="text-2xl mb-4 text-left"
               style={{ marginLeft: "-30px" }}
             >
-              <span className="text-black">Elective Courses</span>
+              <span className="text-black dark:text-white">Elective Courses</span>
             </h2>
             {electiveCourses.map((electiveData) => (
               <div key={electiveData.levelNo}>
-                <h3 className="text-xl mb-4 text-center mt-4 text-black">
+                <h3 className="text-xl mb-4 text-center mt-4 text-black dark:text-white">
                   Level {electiveData.levelNo}
                 </h3>
                 <div className="bg-white p-3 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.25)]">
                   <div className="overflow-x-auto">
-                    <table className="text-black min-w-full table-auto border-collapse border-none">
+                    <table className="text-black min-w-full table-auto border-collapse border-none dark:text-white">
                       <thead>
-                        <tr className="bg-white">
-                          <th className="px-4 py-2 border-b border-gray-300 w-[10%]">
+                        <tr className="bg-white dark:bg-gray-700">
+                          <th className="px-4 py-2 border-b border-gray-300 w-[10%] dark:border-gray-600 w-[10%]">
                             #
                           </th>
-                          <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%]">
+                          <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[70%] dark:border-gray-600 w-[70%]">
                             Course Name
                           </th>
-                          <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%]">
+                          <th className="text-left px-4 py-2 border-b border-l border-gray-300 w-[20%] dark:border-gray-600 w-[20%]">
                             Course Level
                           </th>
                         </tr>
@@ -202,13 +202,13 @@ export default function SearchPage() {
                         {electiveData.courses.map((course, index) => (
                           <tr
                             key={course.courseId}
-                            className="bg-white cursor-pointer hover:bg-gray-100"
+                            className="bg-white cursor-pointer hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700"
                           >
                             <td className="px-4 py-2">{index + 1}</td>
-                            <td className="text-left px-4 py-2 border-l border-gray-300">
+                            <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
                               {course.courseName}
                             </td>
-                            <td className="text-left px-4 py-2 border-l border-gray-300">
+                            <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
                               L{course.courseLevel}
                             </td>
                           </tr>

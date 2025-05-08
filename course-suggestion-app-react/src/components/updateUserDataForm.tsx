@@ -145,7 +145,7 @@ export default function UpdateUserDataForm({
           onChange={handleChange("studyMajorId")}
           disabled={disabled}
           required
-          className="border rounded-md p-2"
+          className="border rounded-md p-2 dark:text-white dark:bg-gray-800 dark:border-gray-600" 
         >
           <option value="">Select your major</option>
           {majors.map((major) => (

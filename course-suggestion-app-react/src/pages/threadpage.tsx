@@ -141,19 +141,19 @@ const ThreadPage = () => {
       {loading ? (
         <Spinner />
       ) : !thread ? (
-        <div className="text-black text-center mt-6">
+        <div className="text-black text-center mt-6 dark:text-white">
           <p>No enough data about your courses...</p>
           <p>First upload your certificate of passing exams!</p>
           <br />
         </div>
       ) : thread ? (
         <div className="container mx-auto">
-          <div className="flex items-center justify-center mt-18 mb-14 text-black text-3xl">
+          <div className="flex items-center justify-center mt-18 mb-14 text-black text-3xl dark:text-white">
             <p>{thread.courseName}</p>
           </div>
           <div className="flex gap-x-4">
             <div className="w-1/2">
-              <p className="text-black mb-4 text-xl">Course Details</p>
+              <p className="text-black mb-4 text-xl dark:text-white">Course Details</p>
               <Card>
                 <CardContent className="border-b border-gray-400 flex items-center">
                   <span className="min-w-[100px] border-r border-gray-400 pr-4">
@@ -197,7 +197,7 @@ const ThreadPage = () => {
               </Card>
             </div>
             <div className="w-1/2">
-              <p className="text-black text-xl mb-4">
+              <p className="text-black text-xl mb-4 dark:text-white">
                  Opportunities after completing this course
               </p>
               <Card>
@@ -212,7 +212,7 @@ const ThreadPage = () => {
           </div>
           <div className="flex gap-x-4">
             <div className="w-1/2">
-              <p className="text-black my-4 text-xl">Comments</p>
+              <p className="text-black my-4 text-xl dark:text-white">Comments</p>
               <Card>
                 <form  onSubmit={handleSubmit}>
                   <input
@@ -261,7 +261,7 @@ const ThreadPage = () => {
               })}
             </div>
             <div className="w-1/2">
-              <p className="text-black my-4 text-xl">Cheat sheets</p>
+              <p className="text-black my-4 text-xl dark:text-white">Cheat sheets</p>
               <Card>
                 <CardContent>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed

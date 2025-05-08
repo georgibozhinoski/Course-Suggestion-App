@@ -177,7 +177,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
       setFormError(null);
     }}
     required
-    className="border rounded-md p-2"
+    className="border rounded-md p-2 dark:text-white dark:bg-gray-800 dark:border-gray-600"
   >
     <option value="">Select your major</option>
     <option value="1">Software engineering and information systems</option>

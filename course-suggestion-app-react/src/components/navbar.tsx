@@ -1,6 +1,7 @@
 import {NavLink, Outlet} from "react-router-dom";
 import logo from "@/assets/logo.webp"
 import avatar from "@/assets/avatar.png"
+import ThemeToggle from "./themeToggle";
 
 // to add more centerMenuLinks edit here
 const centerMenuLinks = [
@@ -11,8 +12,8 @@ const centerMenuLinks = [
 export function Navbar() {
   const navButtonStyle = ({ isActive }: { isActive: boolean }) =>
     (isActive
-      ? "text-primary bg-white hover:bg-gray-200"
-      : "text-white bg-primary hover:bg-gray-400") +
+      ? "text-primary bg-white hover:bg-gray-200 dark:text-gray-900"
+      : "text-white bg-primary hover:bg-gray-400 dark:text-gray-900") +
     " button inline-block h-10 rounded-md p-2 text-center align-middle w-36 text-lg box-border shadow transition";
     return <>
         <div className={'h-20 bg-primary w-full block fixed z-10'}>
@@ -35,5 +36,7 @@ export function Navbar() {
         <div className={'w-full min-h-full bg-muted absolute top-20'}>
             <Outlet/>
         </div>
+
+        <ThemeToggle/>
     </>
 }
