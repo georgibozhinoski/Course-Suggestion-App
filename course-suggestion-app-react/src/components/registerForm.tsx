@@ -90,7 +90,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
         const response = await axios.get("https://api.unsplash.com/photos/random", {
           params: {
             count: 4,
-            query: "digital character",
+            query: "3D art character",
             client_id: "5pWfgjop4MO_BhcQH1N1brebN1sy_hIRPr1UITzpfb0"
           }
         });
