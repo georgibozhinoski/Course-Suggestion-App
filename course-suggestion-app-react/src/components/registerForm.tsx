@@ -15,6 +15,8 @@ import { useNavigate } from "react-router";
 import { AxiosError } from "axios";
 import { FormError } from "./formError";
 import { Progress } from "@/components/ui/progress";
+import { useEffect } from "react";
+import axios from "axios";
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
@@ -25,7 +27,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
   const [transcriptPdf, setTranscriptPdf] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [studyMajorId, setStudyMajorId] = useState(""); 
-
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [avatars, setAvatars] = useState<string[]>([]);
+  
   const register = useAuthStore((s) => s.register);
   const navigate = useNavigate();
 
@@ -60,6 +64,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
       formData.append("last_name", lastName);
       formData.append("password", password);
       formData.append("studyMajor", studyMajorId);
+      formData.append("avatarUrl", avatarUrl);
 
       if (transcriptPdf) {
         formData.append("transcriptPdf", transcriptPdf);
@@ -79,6 +84,26 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
     }
   };
 
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      try {
+        const response = await axios.get("https://api.unsplash.com/photos/random", {
+          params: {
+            count: 4,
+            query: "digital character",
+            client_id: "5pWfgjop4MO_BhcQH1N1brebN1sy_hIRPr1UITzpfb0"
+          }
+        });
+        setAvatars(response.data.map((img: any) => img.urls.small));
+      } catch (error) {
+        console.error("Error fetching avatars:", error);
+      }
+    };
+  
+    fetchAvatars();
+  }, []);
+  
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -91,7 +116,24 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
             <div className="flex flex-col gap-6">
               {formError && <FormError message={formError} />}
 
-              {/* Other inputs here ... */}
+              <div className="grid gap-3">
+                <Label>Select an avatar</Label>
+                <div className="flex justify-center gap-4">
+                  {avatars.map((url, idx) => (
+                    <img
+                      key={idx}
+                      src={url}
+                      alt={`Avatar ${idx + 1}`}
+                      onClick={() => setAvatarUrl(url)}
+                      className={cn(
+                        "w-16 h-16 rounded-full object-cover border-2 cursor-pointer transition",
+                        avatarUrl === url ? "border-green-500 scale-110" : "border-transparent"
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input

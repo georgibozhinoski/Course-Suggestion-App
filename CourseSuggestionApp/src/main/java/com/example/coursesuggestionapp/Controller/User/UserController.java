@@ -1,9 +1,7 @@
 package com.example.coursesuggestionapp.Controller.User;
 
 import com.example.coursesuggestionapp.Models.DTO.PasswordResetDTO;
-import com.example.coursesuggestionapp.Models.DTO.UserRequest;
 import com.example.coursesuggestionapp.Models.DTO.UserResponse;
-import com.example.coursesuggestionapp.Models.Entities.Course;
 import com.example.coursesuggestionapp.Models.Entities.StudyMajor;
 import com.example.coursesuggestionapp.Models.Entities.User;
 import com.example.coursesuggestionapp.Repository.StudyMajorRepository;
@@ -16,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +93,7 @@ public class UserController {
         userRepository.save(user);
 
         return ResponseEntity.ok(
-                new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getStudyMajor().getMajorName())
+                new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getStudyMajor().getMajorName(), user.getAvatarUrl())
         );
     }
 

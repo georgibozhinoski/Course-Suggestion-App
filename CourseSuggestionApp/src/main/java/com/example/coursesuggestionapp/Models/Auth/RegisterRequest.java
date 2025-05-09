@@ -14,6 +14,7 @@ public class RegisterRequest {
     private Long studyMajor;
 
     private MultipartFile transcriptPdf;
+    private String avatarUrl;
 
     public String getFirstName() {
         return first_name;

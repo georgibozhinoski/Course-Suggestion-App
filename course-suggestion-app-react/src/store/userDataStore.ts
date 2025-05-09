@@ -7,6 +7,7 @@ export interface UserInfo {
     firstName: string;
     lastName: string;
     studyMajor: string;
+    avatarUrl?: string;
 }
 
 export interface UpdatePasswordBody {
@@ -16,6 +17,7 @@ export interface UpdatePasswordBody {
 }
 
 interface UserDataState {
+    userInfo: UserInfo | null;
     getUserInfo: (userId: number) => Promise<UserInfo>;
     updateUserInfo: (data: UpdateUserInfoBody, transcriptPdf?: File) => Promise<void>;
     updatePassword: (data: UpdatePasswordBody) => Promise<void>;
@@ -29,6 +31,8 @@ export interface UpdateUserInfoBody {
 }
 
 export const useUserDataStore = create<UserDataState>(() => ({
+    userInfo: null,
+
     getUserInfo: async (userId: number): Promise<UserInfo> => {
         try {
             const res = await axios.get(`/user/${userId}`);
