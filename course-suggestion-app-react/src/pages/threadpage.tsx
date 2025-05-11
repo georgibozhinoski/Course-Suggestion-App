@@ -8,42 +8,10 @@ import { useUserDataStore } from "@/store/userDataStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import avatar from "@/assets/avatar.png";
+import { Course, Comment, CheatSheet, CreateCheatSheetDTO } from "@/lib/interfaces";
+import RatingCard from "@/components/RatingCard.tsx";
 
-interface Course {
-  courseId: number;
-  courseCode: string;
-  courseName: string;
-  courseLevel: string;
-  courseGoals: string;
-  courseDescription: string;
-  creditScore: number;
-  winter: boolean;
-}
 
-interface Comment {
-  commentID: number;
-  commentContent: string;
-  commentDate: string;
-  authorName: string;
-}
-
-export interface CheatSheet {
-  sheetName: string;
-  sheetId: number;
-  sheetDate: string;
-  sheetLikes: number;
-  userId: number;
-  courseId: number;
-}
-
-export interface CreateCheatSheetDTO {
-  sheetName: string;
-  sheetContent: string;
-  sheetDate: string;
-  userId: number | undefined | null;
-  courseId: number | undefined | null;
-  file: string;
-}
 
 
 const ThreadPage = () => {
@@ -74,6 +42,7 @@ const ThreadPage = () => {
       setLoading(true);
       const response = await axiosInstance.get(`/courses/details/${id}`);
       setThread(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Failed to fetch course", error);
     } finally {
@@ -242,9 +211,9 @@ const ThreadPage = () => {
             <p>{thread.courseName}</p>
           </div>
           <div className="flex items-stretch gap-x-4">
-            <div className="w-1/2">
+            <div className="w-1/2 flex flex-col">
               <p className="text-black mb-4 text-xl dark:text-white">Course Details</p>
-              <Card className={'p-10'}>
+              <Card className={'p-10 flex-1'}>
                 <CardContent className="border-b border-gray-400 flex items-center">
                   <span className="min-w-[100px] border-r border-gray-400 pr-4">
                     Code
@@ -284,13 +253,17 @@ const ThreadPage = () => {
               <p className="text-black text-xl mb-4 w-full dark:text-white">
                  Opportunities after completing this course
               </p>
-              <Card className={'flex-1 w-full'}>
+              <Card className={'flex-1 w-full mb-4'}>
                 <CardContent>
                   {thread.courseGoals}
                 </CardContent>
               </Card>
-            </div>
 
+              <p className="text-black text-xl mb-4 w-full dark:text-white">
+                Rating
+              </p>
+              <RatingCard className={'flex-1 w-full h-30'} course={thread} />
+          </div>
           </div>
           <div className="flex gap-x-4">
             <div className="w-1/2">
