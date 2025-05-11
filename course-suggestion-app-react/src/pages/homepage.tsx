@@ -121,7 +121,7 @@ export default function Homepage() {
                         >
                           <td className="px-4 py-2">{index + 1}</td>
                           <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
-                            <Link to={`/thread/${course.courseId}`}>{course.courseName}</Link>
+                            <Link to={`/course/${course.courseId}`}>{course.courseName}</Link>
                           </td>
                           <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
                             {course.courseLevel}

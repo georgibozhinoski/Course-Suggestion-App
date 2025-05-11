@@ -27,6 +27,25 @@ interface Comment {
   authorName: string;
 }
 
+export interface CheatSheet {
+  sheetName: string;
+  sheetId: number;
+  sheetDate: string;
+  sheetLikes: number;
+  userId: number;
+  courseId: number;
+}
+
+export interface CreateCheatSheetDTO {
+  sheetName: string;
+  sheetContent: string;
+  sheetDate: string;
+  userId: number | undefined | null;
+  courseId: number | undefined | null;
+  file: string;
+}
+
+
 const ThreadPage = () => {
   const { id } = useParams();
   const [thread, setThread] = useState<Course | undefined>();
@@ -36,6 +55,16 @@ const ThreadPage = () => {
   const userDataStore = useUserDataStore();
   const [comments, setComments] = useState<Comment[]>([]);
   const [comment, setComment] = useState('');
+  const [cheatSheets, setCheatSheets] = useState<CheatSheet[]>([]);
+  const [newCheatSheet, setNewCheatSheet] = useState<CreateCheatSheetDTO>({
+    sheetName: "",
+    courseId: undefined,
+    file: "",
+    sheetContent: "",
+    sheetDate: "",
+    userId: undefined
+  });
+
   const token = localStorage.getItem('token');
 
   const fetchCourse = async () => {
@@ -66,12 +95,28 @@ const ThreadPage = () => {
     }
   };
 
+  const fetchCheatSheets = async () => {
+    if (userId === null) return;
+
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/cheatSheets/course/${id}`); //todo replace
+      setCheatSheets(response.data);
+    } catch (error) {
+      setCheatSheets([]);
+      console.error("Failed to fetch cheat sheets", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (userId !== null) {
         try {
           await fetchCourse();
           await fetchComments();
+          await fetchCheatSheets();
           const fullUser = await userDataStore.getUserInfo(userId);
           setUserInfo(fullUser);
         } catch (err) {
@@ -88,6 +133,14 @@ const ThreadPage = () => {
       console.log("Thread updated:", thread);
     }
   }, [thread]);
+
+  useEffect(() => {
+   setNewCheatSheet({
+     ...newCheatSheet,
+     userId: userId,
+     courseId: id?+id:undefined
+   })
+  }, [userId, id]);
 
   function formatCustomDate(input: string): string {
     const cleanInput = input.split(".")[0];
@@ -115,7 +168,7 @@ const ThreadPage = () => {
 
     try {
 
-        
+
         await axiosInstance.post(
             `/comments/course/${id}`,
             { commentContent: comment },
@@ -127,14 +180,51 @@ const ThreadPage = () => {
               withCredentials: true,
             }
           );
-          
-    
+
+
         fetchComments();
         setComment('');
       } catch (error) {
         console.error('Failed to post comment:', error);
       }
   };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        setNewCheatSheet({
+          ...newCheatSheet,
+          file: reader.result as string,
+          sheetDate: new Date().toISOString(),
+        });
+      };
+      reader.readAsDataURL(file);
+  }
+
+  const handleCheatSheetUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await axiosInstance.post("/cheatSheets", newCheatSheet);
+      setNewCheatSheet({
+        sheetName: "",
+        sheetContent: "",
+        sheetDate: "",
+        file: "",
+        courseId: id ? +id : undefined,
+        userId: userId,
+      });
+      fetchCheatSheets();
+    } catch (err) {
+      console.error("Failed to upload cheat sheet", err);
+    }
+  }
+
+  const handleCheatSheetDownload = (sheet: CheatSheet)=> {
+
+  }
 
   return (
     <>
@@ -151,10 +241,10 @@ const ThreadPage = () => {
           <div className="flex items-center justify-center mt-18 mb-14 text-black text-3xl dark:text-white">
             <p>{thread.courseName}</p>
           </div>
-          <div className="flex gap-x-4">
+          <div className="flex items-stretch gap-x-4">
             <div className="w-1/2">
               <p className="text-black mb-4 text-xl dark:text-white">Course Details</p>
-              <Card>
+              <Card className={'p-10'}>
                 <CardContent className="border-b border-gray-400 flex items-center">
                   <span className="min-w-[100px] border-r border-gray-400 pr-4">
                     Code
@@ -182,12 +272,6 @@ const ThreadPage = () => {
                     {thread.courseDescription}
                   </span>
                 </CardContent>
-                <CardContent className="border-b border-gray-400 flex items-center">
-                  <span className="min-w-[100px]  pr-4">Goal</span>
-                  <span className="pl-4 border-l border-gray-400">
-                    {thread.courseGoals}
-                  </span>
-                </CardContent>
                 <CardContent className="flex items-center">
                   <span className="min-w-[100px]  pr-4">Level</span>
                   <span className="pl-4 border-l border-gray-400">
@@ -196,19 +280,17 @@ const ThreadPage = () => {
                 </CardContent>
               </Card>
             </div>
-            <div className="w-1/2">
-              <p className="text-black text-xl mb-4 dark:text-white">
+            <div className="w-1/2 flex flex-col">
+              <p className="text-black text-xl mb-4 w-full dark:text-white">
                  Opportunities after completing this course
               </p>
-              <Card>
+              <Card className={'flex-1 w-full'}>
                 <CardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
+                  {thread.courseGoals}
                 </CardContent>
               </Card>
             </div>
+
           </div>
           <div className="flex gap-x-4">
             <div className="w-1/2">
@@ -264,12 +346,53 @@ const ThreadPage = () => {
               <p className="text-black my-4 text-xl dark:text-white">Cheat sheets</p>
               <Card>
                 <CardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
+                  <div className={'flex'}>
+                    <input
+                        type="text"
+                        value={newCheatSheet.sheetName}
+                        name="cheatSheetName"
+                        onChange={(e) =>
+                            setNewCheatSheet({ ...newCheatSheet, sheetName: e.target.value })
+                        }
+                        placeholder="Sheet Name"
+                        className="rounded-md px-4 py-2 focus:outline-none w-1/2 inline mb-4"
+                    />
+
+                    <input
+                        type="file"
+                        name="cheatSheetFile"
+                        onChange={handleFileUpload}
+                        className="inline w-1/2 text-sm text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-primary file:text-white
+                                    hover:file:bg-blue-600
+                                    cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="text-center">
+                    <Button type="button" className="w-1/2" onClick={handleCheatSheetUpload}>
+                      Upload
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
+              {cheatSheets.map((sheet: CheatSheet) =>
+                    <Card className="mt-4" key={sheet.sheetId}>
+                      <div className="flex justify-between">
+                        <small className="mr-8">
+                          {formatCustomDate(sheet.sheetDate)}
+                        </small>
+                      </div>
+                      <h3 className="ml-22">
+                        {sheet.sheetName}
+                      </h3>
+                      <button onClick={() => {handleCheatSheetDownload(sheet)}}>
+                        Download
+                      </button>
+                    </Card>
+                )}
             </div>
           </div>
         </div>

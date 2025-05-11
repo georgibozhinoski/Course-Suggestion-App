@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import Spinner from "@/components/ui/spinner.tsx";
 import { useAuthStore } from "@/store/authStore.ts";
+import {Link, useNavigate} from "react-router";
 
 interface Course {
   courseId: number;
@@ -26,6 +27,8 @@ export default function SearchPage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const userId = useAuthStore((s) => s.userId);
+  const navigate = useNavigate();
+
 
   const semesterNames: string[] = [
     "First Semester",
@@ -153,6 +156,7 @@ export default function SearchPage() {
                         <tr
                           key={course.courseId}
                           className="bg-white cursor-pointer hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700"
+                          onClick={() => navigate(`/course/${course.courseId}`)}
                         >
                           <td className="px-4 py-2">{index + 1}</td>
                           <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">
@@ -203,6 +207,7 @@ export default function SearchPage() {
                           <tr
                             key={course.courseId}
                             className="bg-white cursor-pointer hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700"
+                            onClick={() => navigate(`/course/${course.courseId}`)}
                           >
                             <td className="px-4 py-2">{index + 1}</td>
                             <td className="text-left px-4 py-2 border-l border-gray-300 dark:border-gray-600">

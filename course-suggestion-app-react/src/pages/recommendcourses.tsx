@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {useAuthStore} from "@/store/authStore.ts";
 import axiosInstance from "@/api/axiosInstance.ts";
 import Spinner from "@/components/ui/spinner.tsx";
+import {useNavigate} from "react-router";
 
 interface pyRecDTO {
     course: {
@@ -24,7 +25,7 @@ export default function RecommendCourses() {
     const [error, setError] = useState("");
     const [courses, setCourses] = useState([]);
 
-
+    const navigate = useNavigate();
     const authStore = useAuthStore();
 
     useEffect(() => {
@@ -179,7 +180,10 @@ export default function RecommendCourses() {
             {courses.length > 0 && <div>
                 <h1 className={"text-center text-3xl m-6 text-display"}>Recommended courses</h1>
                 {courses.map((course: pyRecDTO, index) =>
-                    <div key={index} className="max-w-4xl mx-auto my-5 p-6 flex items-start gap-4 bg-white shadow-md rounded-2xl">
+                    <div key={index}
+                         className="max-w-4xl mx-auto my-5 p-6 flex items-start gap-4 bg-white shadow-md rounded-2xl"
+                         onClick={() => navigate(`/course/${course.course.courseId}`)}
+                    >
 
                         <div className="w-10 flex flex-col items-center justify-center text-white text-lg font-bold">
                             <img src={openAEye} alt="openAEye" className="w-10 h-10 " />
