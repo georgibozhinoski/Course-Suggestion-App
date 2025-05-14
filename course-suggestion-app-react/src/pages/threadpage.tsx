@@ -8,6 +8,7 @@ import { useUserDataStore } from "@/store/userDataStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import avatar from "@/assets/avatar.png";
+import file from "@/assets/file.svg";
 import { Course, Comment, CheatSheet, CreateCheatSheetDTO } from "@/lib/interfaces";
 import RatingCard from "@/components/RatingCard.tsx";
 
@@ -69,7 +70,7 @@ const ThreadPage = () => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/cheatSheets/course/${id}`); //todo replace
+      const response = await axiosInstance.get(`/cheatsheets/by-course/${id}`);
       setCheatSheets(response.data);
     } catch (error) {
       setCheatSheets([]);
@@ -159,24 +160,40 @@ const ThreadPage = () => {
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        setNewCheatSheet({
-          ...newCheatSheet,
-          file: reader.result as string,
-          sheetDate: new Date().toISOString(),
-        });
-      };
-      reader.readAsDataURL(file);
-  }
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  const handleCheatSheetUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    setNewCheatSheet({
+      ...newCheatSheet,
+      file: file,
+      sheetDate: new Date().toISOString(),
+    });
+  };
+
+
+  const handleCheatSheetUpload = async (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
-      await axiosInstance.post("/cheatSheets", newCheatSheet);
+      const formData = new FormData();
+
+      const date = new Date(newCheatSheet.sheetDate);
+      const formattedDate = date.toISOString().split(".")[0];
+      formData.append("sheetDate", formattedDate);
+
+      formData.append("sheetContent", newCheatSheet.sheetName);
+      formData.append("userId", String(newCheatSheet.userId));
+      formData.append("courseId", String(newCheatSheet.courseId));
+      if (newCheatSheet.file instanceof File) {
+        formData.append("files", newCheatSheet.file);
+      }
+
+      await axiosInstance.post("/cheatsheets", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+      });
+
       setNewCheatSheet({
         sheetName: "",
         sheetContent: "",
@@ -185,15 +202,37 @@ const ThreadPage = () => {
         courseId: id ? +id : undefined,
         userId: userId,
       });
+
       fetchCheatSheets();
     } catch (err) {
       console.error("Failed to upload cheat sheet", err);
     }
-  }
+  };
 
-  const handleCheatSheetDownload = (sheet: CheatSheet)=> {
 
-  }
+  const handleCheatSheetDownload = async (sheet: CheatSheet) => {
+    try {
+      const response = await axiosInstance.get(`/cheatsheets/file/${sheet.sheetId}`, {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      console.log(response.data)
+
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = sheet.sheetName;
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading the cheat sheet file', error);
+    }
+  };
+
 
   return (
     <>
@@ -206,7 +245,7 @@ const ThreadPage = () => {
           <br />
         </div>
       ) : thread ? (
-        <div className="container mx-auto">
+        <div className="container mx-auto pb-20">
           <div className="flex items-center justify-center mt-18 mb-14 text-black text-3xl dark:text-white">
             <p>{thread.courseName}</p>
           </div>
@@ -268,7 +307,7 @@ const ThreadPage = () => {
           <div className="flex gap-x-4">
             <div className="w-1/2">
               <p className="text-black my-4 text-xl dark:text-white">Comments</p>
-              <Card>
+              <Card className={'h-40'}>
                 <form  onSubmit={handleSubmit}>
                   <input
                     type="text"
@@ -285,7 +324,7 @@ const ThreadPage = () => {
               </Card>
               {comments.map((comment) => {
                 return (
-                  <Card className="mt-4" key={comment.commentID}>
+                  <Card className="mt-4 min-h-40" key={comment.commentID}>
                     <div className="flex justify-between">
                       <div className="flex items-center ml-8">
                         <img
@@ -317,7 +356,7 @@ const ThreadPage = () => {
             </div>
             <div className="w-1/2">
               <p className="text-black my-4 text-xl dark:text-white">Cheat sheets</p>
-              <Card>
+              <Card className={'h-40'}>
                 <CardContent>
                   <div className={'flex'}>
                     <input
@@ -352,20 +391,40 @@ const ThreadPage = () => {
                 </CardContent>
               </Card>
               {cheatSheets.map((sheet: CheatSheet) =>
-                    <Card className="mt-4" key={sheet.sheetId}>
-                      <div className="flex justify-between">
-                        <small className="mr-8">
-                          {formatCustomDate(sheet.sheetDate)}
-                        </small>
+                  <Card className="mt-4 transition-all min-h-40" key={sheet.sheetId}>
+                    <CardContent>
+                      <div className={'flex items-center justify-between'}>
+                        <div className="flex p-5 justify-between items-center mb-3">
+                          <small className="text-gray-500 text-sm">
+                            {formatCustomDate(sheet.sheetDate)}
+                          </small>
+                        </div>
+                        <div className={'flex'}>
+                          <img
+                              src={file}
+                              alt="file icon"
+                              className="w-8 h-8 inline"
+                          />
+                          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                            {sheet.sheetName}
+                          </h3>
+                        </div>
+
+
+                        <Button
+                            variant="default"
+                            className="w-1/3 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            onClick={() => handleCheatSheetDownload(sheet)}
+                        >
+                          Download
+                        </Button>
                       </div>
-                      <h3 className="ml-22">
-                        {sheet.sheetName}
-                      </h3>
-                      <button onClick={() => {handleCheatSheetDownload(sheet)}}>
-                        Download
-                      </button>
-                    </Card>
-                )}
+
+                    </CardContent>
+
+                  </Card>
+
+              )}
             </div>
           </div>
         </div>

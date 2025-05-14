@@ -1,4 +1,5 @@
 package com.example.coursesuggestionapp.Service.impl;
+import com.example.coursesuggestionapp.Models.DTO.CheatSheetInfoDTO;
 import com.example.coursesuggestionapp.Models.DTO.CheatSheetRequest;
 import com.example.coursesuggestionapp.Models.Entities.*;
 import com.example.coursesuggestionapp.Repository.*;
@@ -59,8 +60,8 @@ public class CheatSheetServiceImpl implements CheatSheetService {
     }
 
     @Override
-    public List<CheatSheet> getCheatSheetsByCourse(Long courseId) {
-        return cheatSheetRepo.findByCourseCourseId(courseId);
+    public List<CheatSheetInfoDTO> getCheatSheetsByCourse(Long courseId) {
+        return cheatSheetRepo.findByCourseCourseId(courseId).stream().map(this::toInfoDTO).toList();
     }
 
     @Override
@@ -79,5 +80,28 @@ public class CheatSheetServiceImpl implements CheatSheetService {
         }
 
         cheatSheetRepo.save(cheatSheet);
+    }
+
+    @Override
+    public byte[] getFilesByCheatSheet(Long sheetId) {
+        CheatSheet sheet = cheatSheetRepo.findById(sheetId).orElseThrow(IllegalArgumentException::new);
+        List<File> files = sheet.getFiles();
+
+        if (files.isEmpty()) throw new IllegalStateException("No files found for this cheat sheet");
+
+        return files.stream()
+                .map(File::getContent)
+                .findFirst().get();
+    }
+
+    private CheatSheetInfoDTO toInfoDTO(CheatSheet cheatSheet) {
+        return new CheatSheetInfoDTO(
+                cheatSheet.getSheetContent(),
+                cheatSheet.getSheetId(),
+                cheatSheet.getSheetDate(),
+                cheatSheet.getSheetLikes(),
+                cheatSheet.getUser().getId(),
+                cheatSheet.getCourse().getCourseId()
+        );
     }
 }

@@ -18,8 +18,7 @@ public class File {
     @Column(name = "file_name", nullable = false, length = 50)
     private String fileName;
 
-    @Column(name = "file_content", nullable = false)
-    @Lob
+    @Column(name = "file_content", nullable = false, columnDefinition = "bytea")
     private byte[] content;
 
     @ManyToOne

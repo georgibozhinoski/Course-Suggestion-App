@@ -29,9 +29,9 @@ export interface CheatSheet {
 
 export interface CreateCheatSheetDTO {
     sheetName: string;
-    sheetContent: string;
+    sheetContent: string; // still used if needed
     sheetDate: string;
-    userId: number | undefined | null;
-    courseId: number | undefined | null;
-    file: string;
+    userId?: number | null | undefined;
+    courseId?: number;
+    file: File | string; // allow File here
 }

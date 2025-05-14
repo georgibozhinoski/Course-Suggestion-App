@@ -1,11 +1,18 @@
 package com.example.coursesuggestionapp.Controller;
 
 
+import com.example.coursesuggestionapp.Models.DTO.CheatSheetInfoDTO;
 import com.example.coursesuggestionapp.Models.DTO.CheatSheetRequest;
 import com.example.coursesuggestionapp.Models.Entities.CheatSheet;
+import com.example.coursesuggestionapp.Models.Entities.File;
 import com.example.coursesuggestionapp.Service.CheatSheetService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @RestController
@@ -24,8 +31,20 @@ public class CheatSheetController {
     }
 
     @GetMapping("/by-course/{courseId}")
-    public ResponseEntity<List<CheatSheet>> getByCourse(@PathVariable Long courseId) {
+    public ResponseEntity<List<CheatSheetInfoDTO>> getByCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok(cheatSheetService.getCheatSheetsByCourse(courseId));
+    }
+
+    @GetMapping("/file/{sheetId}")
+    public ResponseEntity<byte[]> getFileById(@PathVariable Long sheetId) {
+        try {
+            byte[] contents = cheatSheetService.getFilesByCheatSheet(sheetId);
+            return ResponseEntity.ok(contents);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+        }
     }
 
     @GetMapping

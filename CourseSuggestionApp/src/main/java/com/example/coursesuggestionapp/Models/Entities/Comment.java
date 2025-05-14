@@ -22,7 +22,7 @@ public class Comment {
     @Column(name = "comment_date")
     private LocalDateTime commentDate;
 
-    @Column(name = "comment_content")
+    @Column(name = "comment_content", length = 3000)
     private String commentContent;
 
     @ManyToOne(fetch = FetchType.EAGER)
