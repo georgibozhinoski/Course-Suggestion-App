@@ -19,7 +19,7 @@ A smart course recommendation platform for students at **FINKI**, designed to he
   - Summer or winter semester preference
   - Optional custom prompt input
 - Python engine calculates course similarity & success likelihood
-- 
+  
 ###  Course Explorer
 - View detailed course info (description, goals, prerequisites)
 - Leave 1–5 star reviews and comments
