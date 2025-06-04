@@ -3,7 +3,8 @@
 #  FINKI Course Recommendation App
 
 A smart course recommendation platform for students at **FINKI**, designed to help them choose the best elective courses based on their academic history, preferences, and goals.
-![Gif](https://github.com/georgibozhinoski/Course-Suggestion-App/tree/main/CourseSuggestionApp/Readme/first.gif)
+
+![Gif](https://github.com/georgibozhinoski/Course-Suggestion-App/blob/main/CourseSuggestionApp/Readme/first.gif)
 
 ## 🚀 Features
 
@@ -25,7 +26,7 @@ A smart course recommendation platform for students at **FINKI**, designed to he
 - Leave 1–5 star reviews and comments
 - Upload/download student-shared cheat sheets
 
-![Gif](https://github.com/georgibozhinoski/Course-Suggestion-App/tree/main/CourseSuggestionApp/Readme/second.gif)
+![Gif](https://github.com/georgibozhinoski/Course-Suggestion-App/blob/main/CourseSuggestionApp/Readme/second.gif)
 
 ## 🛠 Tech Stack
 
