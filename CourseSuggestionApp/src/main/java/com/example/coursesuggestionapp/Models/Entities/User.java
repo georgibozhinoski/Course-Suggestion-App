@@ -43,6 +43,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "major", nullable = false)
     private StudyMajor studyMajor;
 
+    @Column(name = "AvatarUrl", nullable = true)
+    private String avatarUrl;
+
     @OneToMany(mappedBy = "sys_user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<RecommendationList> lists = new ArrayList<>();
 

@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
                 element: <ProfilePage/>
             },
             {
-                path: "thread/:id",
+                path: "course/:id",
                 element: <ThreadPage/>
             }
         ],

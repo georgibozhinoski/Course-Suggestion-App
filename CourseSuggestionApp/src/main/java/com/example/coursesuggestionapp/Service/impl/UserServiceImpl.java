@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             u.setStudyMajor(major);
         }
         userRepository.save(u);
-        return new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getStudyMajor().getMajorName());
+        return new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getStudyMajor().getMajorName(),u.getAvatarUrl());
     }
 
     @Override
@@ -86,6 +86,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse mapToUserResponse(User user) {
-        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getStudyMajor().getMajorName());
+        return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getStudyMajor().getMajorName(), user.getAvatarUrl());
     }
 }

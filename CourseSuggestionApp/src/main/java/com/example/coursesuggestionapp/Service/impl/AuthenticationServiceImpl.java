@@ -74,6 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
         user.setStudyMajor(studyMajor);
+        user.setAvatarUrl(request.getAvatarUrl());
 
         userRepository.save(user);
 
@@ -145,8 +146,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         var jwtToken = jwtService.generateToken(user);
-        AuthenticationResponse authResponse = new AuthenticationResponse(jwtToken, user.getId());
-        return authResponse;
+        return new AuthenticationResponse(jwtToken, user.getId());
     }
 
 }
